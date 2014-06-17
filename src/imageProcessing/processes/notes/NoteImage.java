@@ -5,13 +5,13 @@ import imageProcessing.processes.staves.StaffPosition;
 public class NoteImage {
 	private final int x;
 	private final int staff;
-	private final StaffPosition position;
+	private final StaffPosition staffPosition;
 	private final int index;
 
-	public NoteImage(int x, int staff, StaffPosition position, int index) {
+	public NoteImage(int x, int staff, StaffPosition staffPosition, int index) {
 		this.x = x;
 		this.staff = staff;
-		this.position = position;
+		this.staffPosition = staffPosition;
 		this.index = index;
 	}
 
@@ -23,13 +23,17 @@ public class NoteImage {
 		return this.staff;
 	}
 
+	public StaffPosition getStaffPosition() {
+		return this.staffPosition;
+	}
+
 	public int getX() {
 		return this.x;
 	}
 
 	@Override
 	public String toString() {
-		return "(" + staff + ", " + x + ")->(" + position.position + ", "
-				+ (position.isOnLine ? "Line" : "Space") + ")";
+		return "(" + staff + ", " + x + ")->(" + staffPosition.position + ", "
+				+ (staffPosition.isOnLine ? "Line" : "Space") + ")";
 	}
 }

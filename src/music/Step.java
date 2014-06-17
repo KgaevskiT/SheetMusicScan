@@ -1,11 +1,21 @@
 package music;
 
 public class Step {
-	public static String A = "A";
-	public static String B = "B";
-	public static String C = "C";
-	public static String D = "D";
-	public static String E = "E";
-	public static String F = "F";
-	public static String G = "G";
+	private final String value;
+
+	public static Step A = new Step("A");
+	public static Step B = new Step("B");
+	public static Step C = new Step("C");
+	public static Step D = new Step("D");
+	public static Step E = new Step("E");
+	public static Step F = new Step("F");
+	public static Step G = new Step("G");
+
+	private Step(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
 }

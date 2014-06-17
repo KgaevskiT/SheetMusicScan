@@ -32,4 +32,12 @@ public class StaffPosition {
 		this.isOnLine = isOnLine;
 	}
 
+	public int getPosition() {
+		return this.position;
+	}
+
+	public boolean isOnLine() {
+		return this.isOnLine;
+	}
+
 }
