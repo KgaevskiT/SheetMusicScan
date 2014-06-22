@@ -2,7 +2,10 @@ package music;
 
 import imageProcessing.processes.staves.StaffPosition;
 
-public class Pitch {
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Pitch implements XMLWritable {
 
 	private static Pitch downgrade(Pitch pitch) {
 		switch (pitch.getStep().getValue()) {
@@ -109,7 +112,6 @@ public class Pitch {
 
 	private Step step;
 	private final int alter;
-
 	private int octave;
 
 	public Pitch(Step step, int alter, int octave) {
@@ -132,5 +134,30 @@ public class Pitch {
 
 	public void setStep(Step step) {
 		this.step = step;
+	}
+
+	@Override
+	public void writeXML(FileWriter file, String tab) {
+		try {
+			// Head
+			file.write(tab + "<pitch>"
+					+ java.lang.System.getProperty("line.separator"));
+			// Step
+			file.write(tab + "\t" + "<step>" + this.step.getValue() + "</step>"
+					+ java.lang.System.getProperty("line.separator"));
+			// Alter
+			if (this.alter != 0)
+				file.write(tab + "\t" + "<alter>" + this.alter + "</alter>"
+						+ java.lang.System.getProperty("line.separator"));
+			// Octave
+			file.write(tab + "\t" + "<octave>" + this.octave + "</octave>"
+					+ java.lang.System.getProperty("line.separator"));
+			// End
+			file.write(tab + "</pitch>"
+					+ java.lang.System.getProperty("line.separator"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

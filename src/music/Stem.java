@@ -1,6 +1,9 @@
 package music;
 
-public class Stem {
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Stem implements XMLWritable {
 	public static String UP = "up";
 	public static String DOWN = "down";
 
@@ -11,5 +14,17 @@ public class Stem {
 		super();
 		this.y = y;
 		this.direction = direction;
+	}
+
+	@Override
+	public void writeXML(FileWriter file, String tab) {
+		try {
+			file.write(tab + "<stem default-y=\"" + this.y + "\">"
+					+ this.direction + "</stem>"
+					+ java.lang.System.getProperty("line.separator"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

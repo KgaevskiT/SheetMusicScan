@@ -6,15 +6,20 @@ import imageProcessing.processes.staves.StavesEraser;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import music.Attributes;
+import music.Part;
+import music.initializer.PartInitializer;
+
 public class Main {
 
 	static String workingDir = "C:/Users/Thomas/Documents/MusicSheetScan/";
-	static String testImage = workingDir + "Training_BW/BW_0001.png";// "Ballade pour Adeline.png";
+	static String testImage = workingDir + "Training_BW/BW_0001.png";
 	static String outputFile = workingDir + "output.png";
 
 	public static void deleteStaffs(BufferedImage image) {
@@ -30,8 +35,18 @@ public class Main {
 		ArrayList<NoteImage> blackNotes = blackNoteFinder.getBlackNotesList(
 				image, staves);
 
-		for (NoteImage note : blackNotes) {
-			System.out.println(note.toString());
+		Attributes attributes = Attributes.DEFAULT_ATTRIBUTES;
+
+		PartInitializer partInitializer = new PartInitializer();
+		Part part = partInitializer.getPart("P1", attributes, blackNotes);
+
+		try {
+			FileWriter file = new FileWriter(new File("music.xml"));
+			part.writeXML(file, "");
+			file.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		try {
