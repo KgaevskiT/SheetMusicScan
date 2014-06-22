@@ -1,4 +1,4 @@
-package music;
+package music.xmlWriting;
 
 import java.io.FileWriter;
 

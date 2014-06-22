@@ -3,6 +3,8 @@ package music;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Beam implements XMLWritable {
 	public static String BEGIN = "begin";
 	public static String CONTINUE = "continue";

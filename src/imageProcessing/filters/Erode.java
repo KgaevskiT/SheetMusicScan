@@ -1,21 +1,23 @@
 package imageProcessing.filters;
 
+import imageProcessing.filters.structElt.StructElt;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class Erode implements Filter {
 
 	private BufferedImage eroded = null;
-	private final BufferedImage mask;
+	private final StructElt structElt;
 	private final Color color;
 
-	public Erode(BufferedImage mask) {
-		this.mask = mask;
+	public Erode(StructElt structElt) {
+		this.structElt = structElt;
 		this.color = Color.black;
 	}
 
-	public Erode(BufferedImage mask, Color color) {
-		this.mask = mask;
+	public Erode(StructElt structElt, Color color) {
+		this.structElt = structElt;
 		this.color = color;
 	}
 
@@ -23,6 +25,7 @@ public class Erode implements Filter {
 	public BufferedImage apply(BufferedImage image) {
 		BufferedImage result = new BufferedImage(image.getWidth(),
 				image.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage mask = this.structElt.getImage();
 		int midH = mask.getHeight() / 2;
 		int midW = mask.getWidth() / 2;
 		boolean valid = true;

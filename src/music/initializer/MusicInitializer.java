@@ -12,11 +12,12 @@ import music.Note;
 import music.Part;
 import music.Pitch;
 import music.Print;
+import music.ScorePartwise;
 import music.Stem;
 import music.Type;
 
-public class PartInitializer {
-	public ArrayList<Measure> getMeasures(Attributes attributes,
+public class MusicInitializer {
+	private ArrayList<Measure> getMeasures(Attributes attributes,
 			ArrayList<NoteImage> noteImages) {
 
 		ArrayList<Measure> measures = new ArrayList<Measure>();
@@ -24,6 +25,7 @@ public class PartInitializer {
 
 		// Browse all NoteImage
 		for (int i = 0; i < noteImages.size(); number++) {
+
 			int staff = noteImages.get(i).getStaff();
 
 			ArrayList<Note> notes = new ArrayList<Note>();
@@ -39,11 +41,26 @@ public class PartInitializer {
 			int width = notes.get(notes.size() - 1).getX()
 					- notes.get(0).getX() + 20; // TODO is 20 ok ?
 
-			measures.add(new Measure(number, width, true, Print.DEFAULT_PRINT,
-					attributes, notes));
+			measures.add(new Measure(number, width, number == 1,
+					Print.DEFAULT_PRINT, attributes, notes));
 		}
 
 		return measures;
+	}
+
+	public ScorePartwise getMusic(String title, Attributes attributes,
+			ArrayList<NoteImage> noteImages) {
+
+		ArrayList<Part> parts = new ArrayList<Part>();
+
+		// Part
+		ArrayList<Measure> measures = getMeasures(attributes, noteImages);
+		parts.add(new Part("P1", measures));
+
+		// Partwise
+		ScorePartwise partwise = new ScorePartwise("1.0", title, parts);
+
+		return partwise;
 	}
 
 	private Note getNote(NoteImage noteImage, Attributes attributes) {
@@ -57,12 +74,5 @@ public class PartInitializer {
 				new ArrayList<Notation>());
 
 		return note;
-	}
-
-	public Part getPart(String id, Attributes attributes,
-			ArrayList<NoteImage> noteImages) {
-		ArrayList<Measure> measures = getMeasures(attributes, noteImages);
-
-		return new Part(id, measures);
 	}
 }

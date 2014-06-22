@@ -1,21 +1,23 @@
 package imageProcessing.filters;
 
+import imageProcessing.filters.structElt.StructElt;
+
 import java.awt.image.BufferedImage;
 
-public class ErodeAndExpand implements Filter {
-	private final BufferedImage mask;
+public class Opening implements Filter {
+	private final StructElt structElt;
 	private BufferedImage erased = null;
 
-	public ErodeAndExpand(BufferedImage mask) {
-		this.mask = mask;
+	public Opening(StructElt structElt) {
+		this.structElt = structElt;
 	}
 
 	@Override
 	public BufferedImage apply(BufferedImage image) {
-		Erode erode = new Erode(this.mask);
+		Erode erode = new Erode(this.structElt);
 		image = erode.apply(image);
 		BufferedImage eroded = erode.getEroded();
-		Expand expand = new Expand(this.mask);
+		Expand expand = new Expand(this.structElt);
 		image = expand.apply(image);
 		BufferedImage expanded = expand.getExpanded();
 		this.erased = new Substract().apply(eroded, expanded);

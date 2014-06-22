@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import music.xmlWriting.XMLWritable;
+
 public class Part implements XMLWritable {
 	private final String id;
 	private final ArrayList<Measure> measures;

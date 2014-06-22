@@ -33,7 +33,7 @@ public class NoteImage {
 
 	@Override
 	public String toString() {
-		return "(" + staff + ", " + x + ")->(" + staffPosition.position + ", "
-				+ (staffPosition.isOnLine ? "Line" : "Space") + ")";
+		return "[x = " + x + "; staff = " + staff + "; staffPosition = "
+				+ staffPosition.toString() + "]";
 	}
 }

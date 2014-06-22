@@ -3,6 +3,8 @@ package music;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Print implements XMLWritable {
 	private final int topSystemDistance;
 	private final int staffLayout;

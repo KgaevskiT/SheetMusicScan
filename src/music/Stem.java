@@ -3,6 +3,8 @@ package music;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Stem implements XMLWritable {
 	public static String UP = "up";
 	public static String DOWN = "down";

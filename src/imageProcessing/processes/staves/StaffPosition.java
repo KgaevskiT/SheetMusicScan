@@ -32,12 +32,22 @@ public class StaffPosition {
 		this.isOnLine = isOnLine;
 	}
 
+	public boolean equals(StaffPosition o) {
+		return (this.position == o.getPosition() && this.isOnLine == o
+				.isOnLine());
+	}
+
 	public int getPosition() {
 		return this.position;
 	}
 
 	public boolean isOnLine() {
 		return this.isOnLine;
+	}
+
+	@Override
+	public String toString() {
+		return (isOnLine ? "Line " : "Space ") + position;
 	}
 
 }

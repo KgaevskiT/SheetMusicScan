@@ -3,6 +3,8 @@ package music;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Key implements XMLWritable {
 	public static String MODE_MAJOR = "major";
 	public static String MODE_MINOR = "minor";

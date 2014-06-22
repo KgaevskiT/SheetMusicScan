@@ -1,7 +1,7 @@
 package imageProcessing.processes.notes;
 
 import imageProcessing.filters.Erode;
-import imageProcessing.filters.masks.Mask;
+import imageProcessing.filters.structElt.StructElt;
 import imageProcessing.processes.staves.Staff;
 import imageProcessing.processes.staves.StaffPosition;
 import imageProcessing.processes.staves.Staves;
@@ -9,18 +9,31 @@ import imageProcessing.processes.staves.Staves;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class BlackNoteFinder {
 	public BufferedImage getBlackNotesImage(BufferedImage image) {
-		return new Erode(Mask.Quarter, Color.black).apply(image);
+		return new Erode(StructElt.Quarter, Color.black).apply(image);
 	}
 
 	public ArrayList<NoteImage> getBlackNotesList(BufferedImage image,
 			Staves staves) {
+
 		ArrayList<NoteImage> notes = new ArrayList<NoteImage>();
 		BufferedImage blackNotesImage = getBlackNotesImage(image);
 		NoteCenterFinder centerFinder = new NoteCenterFinder(blackNotesImage);
+
+		// TODO Save black notes for debug
+		try {
+			ImageIO.write(blackNotesImage, "png", new File("blackNotes.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (int h = 0; h < blackNotesImage.getHeight(); h++) {
 			for (int w = 0; w < blackNotesImage.getWidth(); w++) {
@@ -36,7 +49,30 @@ public class BlackNoteFinder {
 						i++;
 					}
 
-					notes.add(i, noteImage);
+					// Check if the new note is not another part of an existing
+					// note
+					boolean alreadyExist = false;
+					if (notes.size() != 0) {
+						// Check next
+						if (i != notes.size()) {
+							if (Math.abs(noteImage.getX() - notes.get(i).getX()) < 10
+									&& noteImage.getStaffPosition().equals(
+											notes.get(i).getStaffPosition())) {
+								alreadyExist = true;
+							}
+						}
+						// Check previous
+						if ((i != 0)
+								&& Math.abs(noteImage.getX()
+										- notes.get(i - 1).getX()) < 10
+								&& noteImage.getStaffPosition().equals(
+										notes.get(i - 1).getStaffPosition())) {
+							alreadyExist = true;
+						}
+					}
+
+					if (!alreadyExist)
+						notes.add(i, noteImage);
 				}
 			}
 		}

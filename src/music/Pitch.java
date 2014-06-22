@@ -5,48 +5,10 @@ import imageProcessing.processes.staves.StaffPosition;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Pitch implements XMLWritable {
 
-	private static Pitch downgrade(Pitch pitch) {
-		switch (pitch.getStep().getValue()) {
-		case "A":
-			pitch.setStep(Step.G);
-			pitch.setOctave(pitch.getOctave() - 1);
-			break;
-		case "B":
-			pitch.setStep(Step.A);
-			break;
-		case "C":
-			pitch.setStep(Step.B);
-			break;
-		case "D":
-			pitch.setStep(Step.C);
-			break;
-		case "E":
-			pitch.setStep(Step.D);
-			break;
-		case "F":
-			pitch.setStep(Step.E);
-			break;
-		case "G":
-			pitch.setStep(Step.F);
-			break;
-		}
-		return pitch;
-	}
-
-	private static Pitch downgrade(Pitch pitch, int n) {
-		while (n > 0) {
-			pitch = Pitch.downgrade(pitch);
-			n--;
-		}
-		return pitch;
-	}
-
-	/*
-	 * Currently only considerating G clef TODO : Algorithme to compute pitch
-	 * for any clef at any position
-	 */
 	public static Pitch getPitch(Attributes attributes,
 			StaffPosition staffPosition) {
 		Pitch pitch = null;
@@ -55,58 +17,23 @@ public class Pitch implements XMLWritable {
 		Step clefStep = attributes.getClefs().get(0).getSign();
 		int clefLine = attributes.getClefs().get(0).getLine();
 
-		// If classic G clef (line 2)
-		if (clefStep == Step.G && clefLine == 2) {
+		// TODO check attributes.getKey()
+		// TODO octave (4)
+		pitch = new Pitch(clefStep, 0, 4);
 
-			// TODO check attributes.getKey()
-			pitch = new Pitch(clefStep, 0, 5);
-
-			if (!staffPosition.isOnLine()) {
-				pitch = Pitch.upgrade(pitch);
-			}
-			for (int i = 0; staffPosition.getPosition() > clefLine + i; i++) {
-				pitch = Pitch.upgrade(pitch, 2);
-			}
-			for (int i = 0; staffPosition.getPosition() < clefLine + i; i--) {
-				pitch = Pitch.downgrade(pitch, 2);
-			}
+		if (!staffPosition.isOnLine()) {
+			pitch.upgrade();
 		}
-		return pitch;
-	}
-
-	private static Pitch upgrade(Pitch pitch) {
-		switch (pitch.getStep().getValue()) {
-		case "A":
-			pitch.setStep(Step.B);
-			break;
-		case "B":
-			pitch.setStep(Step.C);
-			break;
-		case "C":
-			pitch.setStep(Step.D);
-			break;
-		case "D":
-			pitch.setStep(Step.E);
-			break;
-		case "E":
-			pitch.setStep(Step.F);
-			break;
-		case "F":
-			pitch.setStep(Step.G);
-			break;
-		case "G":
-			pitch.setStep(Step.A);
-			pitch.setOctave(pitch.getOctave() + 1);
-			break;
+		for (int i = 0; staffPosition.getPosition() > clefLine + i; i++) {
+			pitch.upgrade(2);
 		}
-		return pitch;
-	}
-
-	private static Pitch upgrade(Pitch pitch, int n) {
-		while (n > 0) {
-			pitch = Pitch.upgrade(pitch);
-			n--;
+		for (int i = 0; staffPosition.getPosition() < clefLine + i; i--) {
+			pitch.downgrade(2);
 		}
+
+		java.lang.System.out.println(staffPosition.toString() + " -> "
+				+ pitch.toString());
+
 		return pitch;
 	}
 
@@ -118,6 +45,40 @@ public class Pitch implements XMLWritable {
 		this.step = step;
 		this.alter = alter;
 		this.octave = octave;
+	}
+
+	private void downgrade() {
+		switch (this.step.getValue()) {
+		case "A":
+			this.step = Step.G;
+			break;
+		case "B":
+			this.step = Step.A;
+			break;
+		case "C":
+			this.step = Step.B;
+			this.octave--;
+			break;
+		case "D":
+			this.step = Step.C;
+			break;
+		case "E":
+			this.step = Step.D;
+			break;
+		case "F":
+			this.step = Step.E;
+			break;
+		case "G":
+			this.step = Step.F;
+			break;
+		}
+	}
+
+	private void downgrade(int n) {
+		while (n > 0) {
+			this.downgrade();
+			n--;
+		}
 	}
 
 	public int getOctave() {
@@ -134,6 +95,46 @@ public class Pitch implements XMLWritable {
 
 	public void setStep(Step step) {
 		this.step = step;
+	}
+
+	@Override
+	public String toString() {
+		return "step = " + step.getValue() + "; octave = " + octave
+				+ "; alter = " + octave;
+	}
+
+	private void upgrade() {
+		switch (this.step.getValue()) {
+		case "A":
+			this.step = Step.B;
+			break;
+		case "B":
+			this.step = Step.C;
+			this.octave++;
+			break;
+		case "C":
+			this.step = Step.D;
+			break;
+		case "D":
+			this.step = Step.E;
+			break;
+		case "E":
+			this.step = Step.F;
+			break;
+		case "F":
+			this.step = Step.G;
+			break;
+		case "G":
+			this.step = Step.A;
+			break;
+		}
+	}
+
+	private void upgrade(int n) {
+		while (n > 0) {
+			this.upgrade();
+			n--;
+		}
 	}
 
 	@Override

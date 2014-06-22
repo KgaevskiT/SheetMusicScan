@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import music.xmlWriting.XMLWritable;
+
 public class Note implements XMLWritable {
 	private final int x;
 	private final Pitch pitch;

@@ -3,26 +3,12 @@ package imageProcessing.processes.notes;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class NoteCenterFinder {
 	private final BufferedImage image;
 
 	public NoteCenterFinder(BufferedImage image) {
 		this.image = image;
-		try {
-			ImageIO.write(
-					image,
-					"png",
-					new File(
-							"C:/Users/Thomas/Documents/MusicSheetScan/NoteCenterFinder.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private void eraseShape(int x, int y) {

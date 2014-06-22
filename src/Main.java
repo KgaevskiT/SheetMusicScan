@@ -6,23 +6,23 @@ import imageProcessing.processes.staves.StavesEraser;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import music.Attributes;
-import music.Part;
-import music.initializer.PartInitializer;
+import music.ScorePartwise;
+import music.initializer.MusicInitializer;
+import music.xmlWriting.MusicXMLWriter;
 
 public class Main {
 
-	static String workingDir = "C:/Users/Thomas/Documents/MusicSheetScan/";
-	static String testImage = workingDir + "Training_BW/BW_0001.png";
-	static String outputFile = workingDir + "output.png";
+	static String testImage = "Training_BW/BW_0005.png";
 
-	public static void deleteStaffs(BufferedImage image) {
+	// static String testImage = "Training_BW/BW_0022.png";
+
+	public static void compute(BufferedImage image, String name) {
 		StavesEraser staffEraser = new StavesEraser();
 		image = staffEraser.EraseStaffs(image);
 		BufferedImage stavesImage = staffEraser.getStaffs();
@@ -37,22 +37,16 @@ public class Main {
 
 		Attributes attributes = Attributes.DEFAULT_ATTRIBUTES;
 
-		PartInitializer partInitializer = new PartInitializer();
-		Part part = partInitializer.getPart("P1", attributes, blackNotes);
+		MusicInitializer musicInitializer = new MusicInitializer();
+		ScorePartwise partwise = musicInitializer.getMusic(name, attributes,
+				blackNotes);
+
+		MusicXMLWriter xmlWriter = new MusicXMLWriter();
+		xmlWriter.writeMusicXML("music.xml", partwise);
 
 		try {
-			FileWriter file = new FileWriter(new File("music.xml"));
-			part.writeXML(file, "");
-			file.close();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
-			ImageIO.write(stavesImage, "png",
-					new File(workingDir + "staff.png"));
-			ImageIO.write(image, "png", new File(outputFile));
+			ImageIO.write(stavesImage, "png", new File("staves.png"));
+			ImageIO.write(image, "png", new File("noStaves.png"));
 		} catch (IOException e) {
 			System.err.println("Error: Couldn't write image");
 			e.printStackTrace();
@@ -65,9 +59,11 @@ public class Main {
 	public static void main(String[] args) {
 		long tStart = System.currentTimeMillis();
 
+		File input = new File(testImage);
+		String name = input.getName();
 		try {
-			BufferedImage image = ImageIO.read(new File(testImage));
-			deleteStaffs(image);
+			BufferedImage image = ImageIO.read(input);
+			compute(image, name);
 
 		} catch (IOException e) {
 			System.err.println("Error: Couldn't read image : " + testImage);

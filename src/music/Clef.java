@@ -3,6 +3,8 @@ package music;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import music.xmlWriting.XMLWritable;
+
 public class Clef implements XMLWritable {
 	private final int number;
 	private final Step sign;

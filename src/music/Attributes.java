@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import music.xmlWriting.XMLWritable;
+
 public class Attributes implements XMLWritable {
 	private final int divisions;
 	private final Key key;
