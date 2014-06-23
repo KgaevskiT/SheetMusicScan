@@ -25,6 +25,35 @@ public class Measure {
 	public void writeXML(FileWriter file, String tab) {
 		try {
 			// Head
+			file.write(tab + "<measure number=\"" + this.number + "\">"
+					+ java.lang.System.getProperty("line.separator"));
+
+			// System
+			if (this.newSystem) {
+				this.attributes.writeXML(file, tab + "\t");
+			} else {
+				file.write(tab + "\t<print new-system=\"no\"/>"
+						+ java.lang.System.getProperty("line.separator"));
+			}
+
+			// Notes
+			for (Note note : this.notes) {
+				note.writeXML(file, tab + "\t");
+			}
+
+			// End
+			file.write(tab + "</measure>"
+					+ java.lang.System.getProperty("line.separator"));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void writeXML_Complete(FileWriter file, String tab) {
+		try {
+			// Head
 			file.write(tab + "<measure number=\"" + this.number + "\" width=\""
 					+ this.width + "\">"
 					+ java.lang.System.getProperty("line.separator"));

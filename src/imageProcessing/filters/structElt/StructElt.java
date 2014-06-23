@@ -6,8 +6,6 @@ import imageProcessing.tools.Tools;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import music.Type;
-
 public class StructElt {
 	/*
 	 * Object: WHITE ; Background: BLACK
@@ -33,7 +31,9 @@ public class StructElt {
 	public static StructElt Circle1 = new StructElt(initCircle1());
 	public static StructElt Square3 = new StructElt(initSquare3());
 	public static StructElt Square5 = new StructElt(initSquare5());
-	public static StructElt Quarter = initQuarter();
+
+	public static StructElt QUARTER = initQuarter();
+	public static StructElt MEASURE_BAR = initMeasureBar();
 
 	private static BufferedImage initCircle1() {
 		BufferedImage image = new BufferedImage(3, 3,
@@ -60,9 +60,16 @@ public class StructElt {
 		return image;
 	}
 
+	private static StructElt initMeasureBar() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("measure");
+
+		return structElt;
+	}
+
 	private static StructElt initQuarter() {
 		StructEltBuilder builder = new StructEltBuilder();
-		StructElt structElt = builder.getStructElt(Type.QUARTER);
+		StructElt structElt = builder.getStructElt("quarter");
 
 		return structElt;
 	}

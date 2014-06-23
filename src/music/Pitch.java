@@ -31,9 +31,6 @@ public class Pitch implements XMLWritable {
 			pitch.downgrade(2);
 		}
 
-		java.lang.System.out.println(staffPosition.toString() + " -> "
-				+ pitch.toString());
-
 		return pitch;
 	}
 

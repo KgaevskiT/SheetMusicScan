@@ -53,8 +53,10 @@ public class Note implements XMLWritable {
 					+ java.lang.System.getProperty("line.separator"));
 			// Type
 			this.type.writeXML(file, tab + "\t");
-			// Stem
-			this.stem.writeXML(file, tab + "\t");
+
+			// Stem (facultative)
+			// this.stem.writeXML(file, tab + "\t");
+
 			// Staff
 			file.write(tab + "\t" + "<staff>" + this.staff + "</staff>"
 					+ java.lang.System.getProperty("line.separator"));
@@ -81,6 +83,5 @@ public class Note implements XMLWritable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 }

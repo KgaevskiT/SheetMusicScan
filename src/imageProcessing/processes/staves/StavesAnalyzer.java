@@ -2,16 +2,34 @@ package imageProcessing.processes.staves;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class StavesAnalyzer {
+	/*
+	 * Return the staff that contains position. 0 if position is not in any
+	 * staff
+	 */
+	public static int getStaffNumber(ArrayList<Staff> staves, int position) {
+		int staffNb = -1;
+		for (int i = 0; i < staves.size(); i++) {
+			Staff staff = staves.get(i);
+			if (position > staff.getLines()[4]
+					&& position < staff.getLines()[0]) {
+				staffNb = i;
+				break;
+			}
+		}
+		return staffNb;
+	}
+
 	private final BufferedImage stavesImage;
 
 	public StavesAnalyzer(BufferedImage stavesImage) {
 		this.stavesImage = stavesImage;
 	}
 
-	public Staves analyzeStaves() {
-		Staves staves = new Staves();
+	public ArrayList<Staff> analyzeStaves() {
+		ArrayList<Staff> staves = new ArrayList<Staff>();
 
 		int x = this.stavesImage.getWidth() / 2;
 
@@ -36,7 +54,7 @@ public class StavesAnalyzer {
 				bottom = y;
 				lines[i] = (top + bottom) / 2;
 			}
-			staves.addStaff(lines);
+			staves.add(new Staff(lines));
 		}
 
 		return staves;

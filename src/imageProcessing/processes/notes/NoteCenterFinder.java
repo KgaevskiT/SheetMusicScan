@@ -1,5 +1,7 @@
 package imageProcessing.processes.notes;
 
+import imageProcessing.tools.Tools;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -9,16 +11,6 @@ public class NoteCenterFinder {
 
 	public NoteCenterFinder(BufferedImage image) {
 		this.image = image;
-	}
-
-	private void eraseShape(int x, int y) {
-		if (image.getRGB(x, y) == Color.white.getRGB()) {
-			image.setRGB(x, y, Color.black.getRGB());
-			eraseShape(x, y - 1);
-			eraseShape(x, y + 1);
-			eraseShape(x + 1, y);
-			eraseShape(x - 1, y);
-		}
 	}
 
 	private int findBestX(int x, int y) {
@@ -81,13 +73,13 @@ public class NoteCenterFinder {
 
 		Point center;
 
-		// TODO Currently note computing optimal point (maybe not useful)
+		// TODO Currently not computing optimal point (maybe not useful)
 		// computing real optimal point
 		/*
 		 * Point center = new Point(findBestX(x, y), findBestY(x, y));
 		 */
 		center = new Point(x, y);
-		eraseShape(center.x, center.y);
+		Tools.eraseShape(this.image, center.x, center.y);
 		return center;
 	}
 

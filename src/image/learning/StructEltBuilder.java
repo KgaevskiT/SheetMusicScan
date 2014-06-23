@@ -11,15 +11,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import music.Type;
-
 public class StructEltBuilder {
-	private static int step = 0;
 
-	private BufferedImage buildStructElt(String path)
-			throws FileNotFoundException {
-		BufferedImage mean = new BufferedImage(50, 50,
-				BufferedImage.TYPE_INT_RGB);
+	private BufferedImage buildStructElt(String path,
+			LearningParameter parameter) throws FileNotFoundException {
+		BufferedImage mean = new BufferedImage(parameter.getWidth(),
+				parameter.getHeight(), BufferedImage.TYPE_INT_RGB);
 		Tools.fill(mean, Color.WHITE);
 		File folder = new File(path + "learning/");
 
@@ -53,15 +50,15 @@ public class StructEltBuilder {
 		// TODO
 		try {
 			ImageIO.write(mean, "png", new File(path + "mean.png"));
-		} catch (IOException e) {
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 
 		// Binarize
 		for (int h = 0; h < mean.getHeight(); h++) {
 			for (int w = 0; w < mean.getWidth(); w++) {
-				if (new Color(mean.getRGB(w, h)).getRed() > StructEltBuilder.step) {
+				if (new Color(mean.getRGB(w, h)).getRed() > parameter.getStep()) {
 					mean.setRGB(w, h, Color.BLACK.getRGB());
 				} else {
 					mean.setRGB(w, h, Color.WHITE.getRGB());
@@ -83,14 +80,21 @@ public class StructEltBuilder {
 		return mean;
 	}
 
-	public StructElt getStructElt(Type type) {
+	public StructElt getStructElt(String type) {
 		BufferedImage image = null;
-		String path = "";
+		String path = "resources/" + type + "/";
+		LearningParameter parameter;
 
-		if (type == type.QUARTER) {
-			path = "resources/quarter/";
-		} else if (type == type.HALF) {
-			path = "resources/half/";
+		switch (type) {
+		case "quarter":
+			parameter = LearningParameter.QUARTER;
+			break;
+		case "measure":
+			parameter = LearningParameter.MEASURE;
+			break;
+		default:
+			parameter = null;
+			break;
 		}
 
 		File file = new File(path + "elt.png");
@@ -103,7 +107,7 @@ public class StructEltBuilder {
 			}
 		} else {
 			try {
-				image = buildStructElt(path);
+				image = buildStructElt(path, parameter);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				System.err.println("Error: " + path + " does not exist");

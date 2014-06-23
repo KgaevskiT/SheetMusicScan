@@ -1,5 +1,7 @@
 package music.initializer;
 
+import imageProcessing.processes.ElementImage;
+import imageProcessing.processes.measures.MeasureImage;
 import imageProcessing.processes.notes.NoteImage;
 
 import java.util.ArrayList;
@@ -18,43 +20,52 @@ import music.Type;
 
 public class MusicInitializer {
 	private ArrayList<Measure> getMeasures(Attributes attributes,
-			ArrayList<NoteImage> noteImages) {
+			ArrayList<ElementImage> elementImages) {
 
 		ArrayList<Measure> measures = new ArrayList<Measure>();
 		int number = 1;
 
-		// Browse all NoteImage
-		for (int i = 0; i < noteImages.size(); number++) {
-
-			int staff = noteImages.get(i).getStaff();
+		// Browse all ElementImage
+		for (int i = 0; i < elementImages.size(); number++) {
 
 			ArrayList<Note> notes = new ArrayList<Note>();
-			notes.add(getNote(noteImages.get(i), attributes));
 
-			// Get all notes on a staff
-			for (i += 1; i < noteImages.size()
-					&& noteImages.get(i).getStaff() == staff; i++) {
-				notes.add(getNote(noteImages.get(i), attributes));
+			if (elementImages.get(i).getClass() == NoteImage.class) {
+				notes.add(getNote((NoteImage) elementImages.get(i), attributes));
+			}
+			i++;
+
+			// Get all notes in a measure
+			for (; i < elementImages.size()
+					&& elementImages.get(i).getClass() == NoteImage.class; i++) {
+				notes.add(getNote((NoteImage) elementImages.get(i), attributes));
 			}
 
-			// Width
-			int width = notes.get(notes.size() - 1).getX()
-					- notes.get(0).getX() + 20; // TODO is 20 ok ?
+			if (i < elementImages.size()
+					&& elementImages.get(i).getClass() == MeasureImage.class) {
+				// Width
+				// TODO is 20 ok ?
+				int width = 20;
+				if (notes.size() > 0) {
 
-			measures.add(new Measure(number, width, number == 1,
-					Print.DEFAULT_PRINT, attributes, notes));
+					width += notes.get(notes.size() - 1).getX()
+							- notes.get(0).getX();
+				}
+
+				measures.add(new Measure(number, width, number == 1,
+						Print.DEFAULT_PRINT, attributes, notes));
+			}
 		}
-
 		return measures;
 	}
 
 	public ScorePartwise getMusic(String title, Attributes attributes,
-			ArrayList<NoteImage> noteImages) {
+			ArrayList<ElementImage> elementImages) {
 
 		ArrayList<Part> parts = new ArrayList<Part>();
 
 		// Part
-		ArrayList<Measure> measures = getMeasures(attributes, noteImages);
+		ArrayList<Measure> measures = getMeasures(attributes, elementImages);
 		parts.add(new Part("P1", measures));
 
 		// Partwise
