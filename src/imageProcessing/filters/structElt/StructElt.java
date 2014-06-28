@@ -27,11 +27,11 @@ public class StructElt {
 			initLineHorizontal(50));
 	public static StructElt LineHorizontal100 = new StructElt(
 			initLineHorizontal(100));
-	public static StructElt LineVertical5 = new StructElt(initLineVertical(5));
 	public static StructElt Circle1 = new StructElt(initCircle1());
 	public static StructElt Square3 = new StructElt(initSquare3());
 	public static StructElt Square5 = new StructElt(initSquare5());
 
+	public static StructElt STAFF = new StructElt(initLineVertical(5));
 	public static StructElt QUARTER = initQuarter();
 	public static StructElt MEASURE_BAR = initMeasureBar();
 

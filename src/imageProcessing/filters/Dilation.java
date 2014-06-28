@@ -5,18 +5,18 @@ import imageProcessing.filters.structElt.StructElt;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public class Expand implements Filter {
+public class Dilation implements Filter {
 
 	private BufferedImage expanded;
 	private final StructElt structElt;
 	private final Color color;
 
-	public Expand(StructElt structElt) {
+	public Dilation(StructElt structElt) {
 		this.structElt = structElt;
 		this.color = Color.white;
 	}
 
-	public Expand(StructElt structElt, Color color) {
+	public Dilation(StructElt structElt, Color color) {
 		this.structElt = structElt;
 		this.color = color;
 	}

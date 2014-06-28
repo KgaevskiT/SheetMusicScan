@@ -1,6 +1,6 @@
 package imageProcessing.processes.notes;
 
-import imageProcessing.filters.Erode;
+import imageProcessing.filters.Erosion;
 import imageProcessing.filters.structElt.StructElt;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.staves.Staff;
@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import music.Type;
+
 public class BlackNoteFinder {
 	private final ArrayList<Staff> staves;
 
@@ -23,7 +25,7 @@ public class BlackNoteFinder {
 	}
 
 	public BufferedImage getBlackNotesImage(BufferedImage image) {
-		return new Erode(StructElt.QUARTER, Color.black).apply(image);
+		return new Erosion(StructElt.QUARTER, Color.black).apply(image);
 	}
 
 	public ArrayList<ElementImage> getBlackNotesList(BufferedImage image) {
@@ -58,6 +60,7 @@ public class BlackNoteFinder {
 
 	private NoteImage getNoteImage(Point noteCenter, int imageWidth) {
 		int x = noteCenter.x;
+		int y = noteCenter.y;
 		int staffNumber = -1;
 		StaffPosition position = null;
 
@@ -72,37 +75,35 @@ public class BlackNoteFinder {
 			for (int j = 4; notFound && j >= 0; j--) {
 
 				// Position found
-				if (noteCenter.y < lines[j]) {
+				if (y < lines[j]) {
 					notFound = false;
 
 					// Between 2 staves
 					if (j == 4 && i != 0) {
 
 						// Below previous staff
-						if ((lines[4] - noteCenter.y) > (noteCenter.y - staves
-								.get(i - 1).getLines()[0])) {
+						if ((lines[4] - y) > (y - staves.get(i - 1).getLines()[0])) {
 							staffNumber = i - 1;
-							position = getStaffPosition(staves.get(i - 1),
-									noteCenter.y, 0);
+							position = getStaffPosition(staves.get(i - 1), y, 0);
 						}
 
 						// Above current staff
 						else {
 							staffNumber = i;
-							position = getStaffPosition(staff, noteCenter.y, 4);
+							position = getStaffPosition(staff, y, 4);
 						}
 					}
 
 					// Above first staff
 					else if (j == 4 && i == 0) {
 						staffNumber = 0;
-						position = getStaffPosition(staff, noteCenter.y, 4);
+						position = getStaffPosition(staff, y, 4);
 					}
 
 					// On current staff
 					else {
 						staffNumber = i;
-						position = getStaffPosition(staff, noteCenter.y, j + 1);
+						position = getStaffPosition(staff, y, j + 1);
 					}
 				}
 			}
@@ -111,12 +112,11 @@ public class BlackNoteFinder {
 		// Below last staff
 		if (notFound) {
 			staffNumber = staves.size() - 1;
-			position = getStaffPosition(staves.get(staves.size() - 1),
-					noteCenter.y, 0);
+			position = getStaffPosition(staves.get(staves.size() - 1), y, 0);
 		}
 
-		return new NoteImage(x, staffNumber, position, x + staffNumber
-				* imageWidth);
+		return new NoteImage(x, y, staffNumber, x + staffNumber * imageWidth,
+				position, Type.QUARTER);
 	}
 
 	private StaffPosition getStaffPosition(Staff staff, int y, int line) {

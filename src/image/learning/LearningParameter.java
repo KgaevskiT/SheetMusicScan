@@ -1,7 +1,7 @@
 package image.learning;
 
 public class LearningParameter {
-	public static LearningParameter QUARTER = new LearningParameter(0, 50, 50);
+	public static LearningParameter QUARTER = new LearningParameter(32, 50, 50);
 	public static LearningParameter MEASURE = new LearningParameter(0, 30, 200);
 
 	private final int step;

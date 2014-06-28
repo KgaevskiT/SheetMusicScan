@@ -24,10 +24,10 @@ public class MusicInitializer {
 
 		ArrayList<Measure> measures = new ArrayList<Measure>();
 		int number = 1;
+		boolean newSystem = true;
 
 		// Browse all ElementImage
 		for (int i = 0; i < elementImages.size(); number++) {
-
 			ArrayList<Note> notes = new ArrayList<Note>();
 
 			if (elementImages.get(i).getClass() == NoteImage.class) {
@@ -38,24 +38,24 @@ public class MusicInitializer {
 			// Get all notes in a measure
 			for (; i < elementImages.size()
 					&& elementImages.get(i).getClass() == NoteImage.class; i++) {
+
 				notes.add(getNote((NoteImage) elementImages.get(i), attributes));
 			}
 
-			if (i < elementImages.size()
-					&& elementImages.get(i).getClass() == MeasureImage.class) {
-				// Width
-				// TODO is 20 ok ?
-				int width = 20;
-				if (notes.size() > 0) {
+			int width = 20;
+			if (notes.size() > 0) {
+				width += notes.get(notes.size() - 1).getX()
+						- notes.get(0).getX();
+			}
 
-					width += notes.get(notes.size() - 1).getX()
-							- notes.get(0).getX();
-				}
+			measures.add(new Measure(number, width, newSystem,
+					Print.DEFAULT_PRINT, attributes, notes));
 
-				measures.add(new Measure(number, width, number == 1,
-						Print.DEFAULT_PRINT, attributes, notes));
+			if (i < elementImages.size()) {
+				newSystem = ((MeasureImage) elementImages.get(i)).isNewSystem();
 			}
 		}
+
 		return measures;
 	}
 
@@ -78,10 +78,19 @@ public class MusicInitializer {
 		Pitch pitch = Pitch.getPitch(attributes, noteImage.getStaffPosition());
 
 		// TODO Compute Stem
-		// TODO Beam
 		// TODO Notation
-		Note note = new Note(noteImage.getX(), pitch, 8, 3, Type.QUARTER,
-				new Stem(7, Stem.UP), 1, new ArrayList<Beam>(),
+
+		int duration = 2;
+		if (noteImage.getType() == Type.EIGHTH) {
+			duration = 1;
+		}
+		ArrayList<Beam> beams = new ArrayList<Beam>();
+		Beam beam = noteImage.getBeam();
+		if (beam != null)
+			beams.add(beam);
+
+		Note note = new Note(noteImage.getX(), pitch, duration, 3,
+				noteImage.getType(), new Stem(7, Stem.UP), 1, beams,
 				new ArrayList<Notation>());
 
 		return note;

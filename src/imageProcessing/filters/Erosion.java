@@ -5,18 +5,18 @@ import imageProcessing.filters.structElt.StructElt;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public class Erode implements Filter {
+public class Erosion implements Filter {
 
 	private BufferedImage eroded = null;
 	private final StructElt structElt;
 	private final Color color;
 
-	public Erode(StructElt structElt) {
+	public Erosion(StructElt structElt) {
 		this.structElt = structElt;
 		this.color = Color.black;
 	}
 
-	public Erode(StructElt structElt, Color color) {
+	public Erosion(StructElt structElt, Color color) {
 		this.structElt = structElt;
 		this.color = color;
 	}

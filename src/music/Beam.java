@@ -21,8 +21,13 @@ public class Beam implements XMLWritable {
 	@Override
 	public void writeXML(FileWriter file, String tab) {
 		try {
-			file.write(tab + "<beam number=\"" + this.number + ">"
-					+ this.position + "</beam>"
+			// With optional "number"
+			/*
+			 * file.write(tab + "<beam number=\"" + this.number + "\">" +
+			 * this.position + "</beam>" +
+			 * java.lang.System.getProperty("line.separator"));
+			 */
+			file.write(tab + "<beam>" + this.position + "</beam>"
 					+ java.lang.System.getProperty("line.separator"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

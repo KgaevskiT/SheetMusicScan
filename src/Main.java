@@ -1,3 +1,4 @@
+import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.ImageReader;
 
@@ -12,14 +13,39 @@ import music.Attributes;
 import music.ScorePartwise;
 import music.initializer.MusicInitializer;
 import music.xmlWriting.MusicXMLWriter;
+import timer.Timer;
 
 public class Main {
 
-	static String testImage = "Training_BW/OneNote.png";
+	static String testImage = "Training_BW/BW_0004.png";
 
 	// static String testImage = "Training_BW/BW_0022.png";
 
-	public static void compute(BufferedImage image, String name) {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		long tStart = System.currentTimeMillis();
+
+		File input = new File(testImage);
+		String name = input.getName();
+		VisualMode.enable = true;
+		try {
+			BufferedImage image = ImageIO.read(input);
+
+			writeMusicXML(image, name);
+
+		} catch (IOException e) {
+			System.err.println("Error: Couldn't read image : " + testImage);
+			e.printStackTrace();
+		}
+
+		long tEnd = System.currentTimeMillis();
+		System.out.println("Time elapsed: "
+				+ Timer.getTimeElapsed(tStart, tEnd));
+	}
+
+	public static void writeMusicXML(BufferedImage image, String name) {
 		ImageReader imageReader = new ImageReader();
 		ArrayList<ElementImage> elementImage = imageReader
 				.getElementImages(image);
@@ -32,39 +58,5 @@ public class Main {
 
 		MusicXMLWriter xmlWriter = new MusicXMLWriter();
 		xmlWriter.writeMusicXML("music.xml", partwise);
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		long tStart = System.currentTimeMillis();
-
-		File input = new File(testImage);
-		String name = input.getName();
-		try {
-			BufferedImage image = ImageIO.read(input);
-			compute(image, name);
-
-		} catch (IOException e) {
-			System.err.println("Error: Couldn't read image : " + testImage);
-			e.printStackTrace();
-		}
-
-		long tEnd = System.currentTimeMillis();
-		printTimeElapsed(tStart, tEnd);
-	}
-
-	public static void printTimeElapsed(long tStart, long tEnd) {
-		long elapsed = tEnd - tStart;
-		long minutes = elapsed / 60000;
-		long seconds = elapsed / 1000 - minutes * 60;
-		long millis = elapsed - seconds * 1000 - minutes * 60000;
-		System.out.print("Time elapsed: ");
-		if (minutes != 0)
-			System.out.print(minutes + "'");
-		if (seconds != 0 || minutes != 0)
-			System.out.print(seconds + "\"");
-		System.out.println(millis);
 	}
 }

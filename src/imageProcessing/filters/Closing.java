@@ -14,10 +14,10 @@ public class Closing implements Filter {
 
 	@Override
 	public BufferedImage apply(BufferedImage image) {
-		Expand expand = new Expand(this.structElt);
+		Dilation expand = new Dilation(this.structElt);
 		image = expand.apply(image);
 		BufferedImage expanded = expand.getExpanded();
-		Erode erode = new Erode(this.structElt);
+		Erosion erode = new Erosion(this.structElt);
 		image = erode.apply(image);
 		BufferedImage eroded = erode.getEroded();
 		this.added = new Substract().apply(expanded, eroded);

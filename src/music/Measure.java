@@ -22,6 +22,20 @@ public class Measure {
 		this.notes = notes;
 	}
 
+	@Override
+	public String toString() {
+		String result = "Measure " + number
+				+ java.lang.System.getProperty("line.separator") + "{"
+				+ java.lang.System.getProperty("line.separator");
+		for (Note note : notes) {
+			result += "\t" + note.toString()
+					+ java.lang.System.getProperty("line.separator");
+		}
+		result += "}" + java.lang.System.getProperty("line.separator");
+
+		return result;
+	}
+
 	public void writeXML(FileWriter file, String tab) {
 		try {
 			// Head

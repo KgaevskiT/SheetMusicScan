@@ -97,7 +97,7 @@ public class Pitch implements XMLWritable {
 	@Override
 	public String toString() {
 		return "step = " + step.getValue() + "; octave = " + octave
-				+ "; alter = " + octave;
+				+ "; alter = " + alter;
 	}
 
 	private void upgrade() {

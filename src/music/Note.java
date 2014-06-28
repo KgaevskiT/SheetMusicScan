@@ -37,6 +37,11 @@ public class Note implements XMLWritable {
 	}
 
 	@Override
+	public String toString() {
+		return "Note [x = " + x + ", pitch = " + pitch.toString() + "]";
+	}
+
+	@Override
 	public void writeXML(FileWriter file, String tab) {
 		try {
 			// Head

@@ -8,6 +8,7 @@ import music.xmlWriting.XMLWritable;
 public class Type implements XMLWritable {
 	public static Type HALF = new Type("half");
 	public static Type QUARTER = new Type("quarter");
+	public static Type EIGHTH = new Type("eighth");
 
 	private final String value;
 

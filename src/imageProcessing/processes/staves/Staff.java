@@ -24,7 +24,13 @@ public class Staff {
 
 	@Override
 	public String toString() {
-		return lines[4] + " " + lines[3] + " " + lines[2] + " " + lines[1]
-				+ " " + lines[0];
+		return lines[4] + " (" + (lines[3] - lines[4]) + ")"
+				+ System.getProperty("line.separator") + lines[3] + " ("
+				+ (lines[2] - lines[3]) + ")"
+				+ System.getProperty("line.separator") + lines[2] + " ("
+				+ (lines[1] - lines[2]) + ")"
+				+ System.getProperty("line.separator") + lines[1] + " ("
+				+ (lines[0] - lines[1]) + ")"
+				+ System.getProperty("line.separator") + lines[0];
 	}
 }
