@@ -1,21 +1,19 @@
 package imageProcessing.processes;
 
 import imageProcessing.colorMode.VisualMode;
+import imageProcessing.processes.clefs.ClefFinder;
 import imageProcessing.processes.measures.MeasureFinder;
 import imageProcessing.processes.measures.MeasureImage;
 import imageProcessing.processes.notes.BlackNoteFinder;
 import imageProcessing.processes.notes.EighthFinder;
-import imageProcessing.processes.notes.NoteImage;
+import imageProcessing.processes.notes.WholeFinder;
+import imageProcessing.processes.rests.RestFinder;
 import imageProcessing.processes.staves.Staff;
 import imageProcessing.processes.staves.StavesAnalyzer;
 import imageProcessing.processes.staves.StavesEraser;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import timer.Timer;
 
@@ -24,19 +22,19 @@ public class ImageReader {
 			ArrayList<ElementImage> eltImages) {
 		for (int i = 0; i + 1 < eltImages.size(); i++) {
 			if (eltImages.get(i).getStaff() != eltImages.get(i + 1).getStaff()) {
-				if (eltImages.get(i).getClass() == NoteImage.class
+				if (eltImages.get(i).getClass() != MeasureImage.class
 						&& eltImages.get(i + 1).getClass() == MeasureImage.class) {
 					((MeasureImage) eltImages.get(i + 1)).setNewSystem(true);
 				} else if (eltImages.get(i).getClass() == MeasureImage.class
-						&& eltImages.get(i + 1).getClass() == NoteImage.class) {
+						&& eltImages.get(i + 1).getClass() != MeasureImage.class) {
 					eltImages.get(i).setStaff(eltImages.get(i).getStaff() + 1);
 					((MeasureImage) eltImages.get(i)).setNewSystem(true);
 				} else if (eltImages.get(i).getClass() == MeasureImage.class
 						&& eltImages.get(i + 1).getClass() == MeasureImage.class) {
 					((MeasureImage) eltImages.get(i + 1)).setNewSystem(true);
 					eltImages.remove(i);
-				} else if (eltImages.get(i).getClass() == NoteImage.class
-						&& eltImages.get(i + 1).getClass() == NoteImage.class) {
+				} else if (eltImages.get(i).getClass() != MeasureImage.class
+						&& eltImages.get(i + 1).getClass() != MeasureImage.class) {
 					eltImages.add(i + 1,
 							new MeasureImage(0, 0, eltImages.get(i + 1)
 									.getStaff(), 0, true));
@@ -59,7 +57,7 @@ public class ImageReader {
 
 		// Erase staves on image
 		StavesEraser stavesEraser = new StavesEraser();
-		image = stavesEraser.EraseStaffs(image);
+		image = stavesEraser.EraseStaves(image);
 		timer.step("[Main] Erase staves");
 
 		// Delete staves
@@ -90,67 +88,86 @@ public class ImageReader {
 		// image = new NoiseClosing().apply(image);
 		// image = new NoiseOpening().apply(image);
 
+		// Get clefs TODO !
+		ClefFinder clefFinder = new ClefFinder(staves, image);
+		ArrayList<ElementImage> clefs = clefFinder.findClefs();
+		timer.step("[Main] Get clefs");
+
+		// Get rests
+		RestFinder restFinder = new RestFinder(staves, image);
+		ArrayList<ElementImage> restImages = restFinder.findRests();
+		timer.step("[Main] Get rests");
+
 		// Get black notes
-		BlackNoteFinder blackNoteFinder = new BlackNoteFinder(staves);
+		BlackNoteFinder blackNoteFinder = new BlackNoteFinder(staves, image);
 		ArrayList<ElementImage> blackNoteImages = blackNoteFinder
-				.getBlackNotesList(image);
+				.getBlackNotesList();
 		timer.step("[Main] Get black notes");
 
-		// Get eighths notes
+		// Get eighth notes
 		EighthFinder eighthFinder = new EighthFinder(blackNoteImages, image);
 		blackNoteImages = eighthFinder.findEighth();
-		timer.step("[Main] Get eighths notes");
+		timer.step("[Main] Get eighth notes");
 
-		ArrayList<ElementImage> elementImages = mergeElements(blackNoteImages,
-				measureImages);
+		// Get whole notes
+		WholeFinder wholeFinder = new WholeFinder(staves, image);
+		ArrayList<ElementImage> wholeImages = wholeFinder.findWholes();
+		timer.step("[Main] Get whole notes");
 
-		// Write output (color)
+		blackNoteImages = mergeElements(blackNoteImages, wholeImages);
+
+		// Add elements and write output (color)
 		if (VisualMode.enable) {
+			Timer t = new Timer();
+			VisualMode.addClefs(clefs);
+			VisualMode.addMeasures(measureImages);
+			VisualMode.addNotes(blackNoteImages);
+			VisualMode.addRests(restImages);
 			VisualMode.save();
+			t.step("\t[ColorMode] Color elements (Measures, Quarter, Half)");
+			timer.step();
 		}
 
-		// TODO debug
-		try {
-			ImageIO.write(stavesImage, "png", new File("staves.png"));
-			ImageIO.write(image, "png", new File("noStaves.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ArrayList<ElementImage> noteImages = mergeElements(blackNoteImages,
+				restImages);
+		ArrayList<ElementImage> elementImages = mergeElements(noteImages,
+				measureImages);
+		addLineCrossing(elementImages);
 
 		return elementImages;
 	}
 
 	private ArrayList<ElementImage> mergeElements(
-			ArrayList<ElementImage> blackNoteImages,
-			ArrayList<ElementImage> measureImages) {
+			ArrayList<ElementImage> elementImages1,
+			ArrayList<ElementImage> elementImages2) {
 
 		ArrayList<ElementImage> elementImages = new ArrayList<ElementImage>();
 
 		int noteI = 0;
 		int measureI = 0;
-		while (noteI < blackNoteImages.size()
-				|| measureI < measureImages.size()) {
+		while (noteI < elementImages1.size()
+				|| measureI < elementImages2.size()) {
 
-			if (measureI == measureImages.size()) {
-				elementImages.add(blackNoteImages.get(noteI));
+			if (measureI == elementImages2.size()) {
+				elementImages.add(elementImages1.get(noteI));
 				noteI++;
 				continue;
 			}
-			if (noteI == blackNoteImages.size()) {
-				elementImages.add(measureImages.get(measureI));
+			if (noteI == elementImages1.size()) {
+				elementImages.add(elementImages2.get(measureI));
 				measureI++;
 				continue;
 			}
-			if (blackNoteImages.get(noteI).getIndex() < measureImages.get(
+			if (elementImages1.get(noteI).getIndex() < elementImages2.get(
 					measureI).getIndex()) {
-				elementImages.add(blackNoteImages.get(noteI));
+				elementImages.add(elementImages1.get(noteI));
 				noteI++;
 			} else {
-				elementImages.add(measureImages.get(measureI));
+				elementImages.add(elementImages2.get(measureI));
 				measureI++;
 			}
 		}
 
-		return addLineCrossing(elementImages);
+		return elementImages;
 	}
 }

@@ -7,14 +7,26 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class StructElt {
+	private static StructElt initBreve() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("breve");
+
+		return structElt;
+	}
+
+	private static StructElt initMinimSemibreve() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("minim_semibreve");
+
+		return structElt;
+	}
+
 	/*
 	 * Object: WHITE ; Background: BLACK
 	 */
 	private final BufferedImage image;
-
 	public static StructElt LineHorizontal3 = new StructElt(
 			initLineHorizontal(3));
-
 	public static StructElt LineHorizontal5 = new StructElt(
 			initLineHorizontal(5));
 	public static StructElt LineHorizontal10 = new StructElt(
@@ -28,12 +40,23 @@ public class StructElt {
 	public static StructElt LineHorizontal100 = new StructElt(
 			initLineHorizontal(100));
 	public static StructElt Circle1 = new StructElt(initCircle1());
+
 	public static StructElt Square3 = new StructElt(initSquare3());
 	public static StructElt Square5 = new StructElt(initSquare5());
 
 	public static StructElt STAFF = new StructElt(initLineVertical(5));
-	public static StructElt QUARTER = initQuarter();
+
 	public static StructElt MEASURE_BAR = initMeasureBar();
+	// Notes
+	public static StructElt QUARTER = initQuarter();
+	public static StructElt WHOLE = initWhole();
+	// Rests
+	public static StructElt LONG = initLong();
+	public static StructElt BREVE = initBreve();
+	public static StructElt MINIM_SEMIBREVE = initMinimSemibreve();
+	public static StructElt CROTCHET = initCrotchet();
+
+	public static StructElt QUAVER = initQuaver();
 
 	private static BufferedImage initCircle1() {
 		BufferedImage image = new BufferedImage(3, 3,
@@ -44,6 +67,13 @@ public class StructElt {
 		image.setRGB(0, 2, Color.black.getRGB());
 		image.setRGB(2, 2, Color.black.getRGB());
 		return image;
+	}
+
+	private static StructElt initCrotchet() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("crotchet");
+
+		return structElt;
 	}
 
 	private static BufferedImage initLineHorizontal(int length) {
@@ -60,6 +90,13 @@ public class StructElt {
 		return image;
 	}
 
+	private static StructElt initLong() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("long");
+
+		return structElt;
+	}
+
 	private static StructElt initMeasureBar() {
 		StructEltBuilder builder = new StructEltBuilder();
 		StructElt structElt = builder.getStructElt("measure");
@@ -70,6 +107,13 @@ public class StructElt {
 	private static StructElt initQuarter() {
 		StructEltBuilder builder = new StructEltBuilder();
 		StructElt structElt = builder.getStructElt("quarter");
+
+		return structElt;
+	}
+
+	private static StructElt initQuaver() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("quaver");
 
 		return structElt;
 	}
@@ -86,6 +130,12 @@ public class StructElt {
 				BufferedImage.TYPE_INT_RGB);
 		Tools.fill(image, Color.white);
 		return image;
+	}
+
+	private static StructElt initWhole() {
+		StructEltBuilder builder = new StructEltBuilder();
+		StructElt structElt = builder.getStructElt("whole");
+		return structElt;
 	}
 
 	public StructElt(BufferedImage image) {

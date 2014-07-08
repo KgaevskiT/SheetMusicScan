@@ -23,7 +23,47 @@ package imageProcessing.processes.staves;
  */
 
 public class StaffPosition {
+	public static StaffPosition getStaffPosition(Staff staff, int y, int line) {
+		int staffPosition;
+		boolean isOnLine;
+
+		int gap = (staff.getLines()[0] - staff.getLines()[4]) / 4;
+		int position = staff.getLines()[line];
+
+		// while note is above current line
+		while (position > y) {
+			position -= gap;
+			line++;
+		}
+		// while note is under current line - 1
+		while (position + gap < y) {
+			position += gap;
+			line--;
+		}
+
+		// position is now the line above note
+
+		// On current line
+		if (y - position < gap / 4) {
+			staffPosition = line + 1;
+			isOnLine = true;
+		}
+		// Between current line and the line below
+		else if (y - position < 3 * gap / 4) {
+			staffPosition = line;
+			isOnLine = false;
+		}
+		// On the line below
+		else {
+			staffPosition = line;
+			isOnLine = true;
+		}
+
+		return new StaffPosition(staffPosition, isOnLine);
+	}
+
 	public int position;
+
 	public boolean isOnLine;
 
 	public StaffPosition(int position, boolean isOnLine) {

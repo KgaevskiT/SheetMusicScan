@@ -1,13 +1,10 @@
 package imageProcessing.processes;
 
-import imageProcessing.colorMode.VisualMode;
-import imageProcessing.processes.notes.NoteImage;
-
 import java.util.ArrayList;
 
-public class ElementImage {
+public abstract class ElementImage {
 
-	private static int ELT_MARGIN = 10;
+	private static int ELT_MARGIN = 20;
 
 	public static boolean addElt(ArrayList<ElementImage> list, ElementImage elt) {
 
@@ -35,9 +32,6 @@ public class ElementImage {
 		}
 		if (!alreadyExist) {
 			list.add(i, elt);
-			if (elt.getClass() == NoteImage.class && VisualMode.enable) {
-				VisualMode.addNote(elt.getX(), elt.getY());
-			}
 		}
 
 		return !alreadyExist;

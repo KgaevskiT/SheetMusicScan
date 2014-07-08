@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 public class StavesEraser {
 	private BufferedImage staffs = null;
 
-	public BufferedImage EraseStaffs(BufferedImage image) {
+	public BufferedImage EraseStaves(BufferedImage image) {
 		Opening opening = new Opening(StructElt.STAFF);
 		image = opening.apply(image);
 

@@ -3,6 +3,7 @@ package music.initializer;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.measures.MeasureImage;
 import imageProcessing.processes.notes.NoteImage;
+import imageProcessing.processes.rests.RestImage;
 
 import java.util.ArrayList;
 
@@ -30,16 +31,25 @@ public class MusicInitializer {
 		for (int i = 0; i < elementImages.size(); number++) {
 			ArrayList<Note> notes = new ArrayList<Note>();
 
-			if (elementImages.get(i).getClass() == NoteImage.class) {
-				notes.add(getNote((NoteImage) elementImages.get(i), attributes));
+			if (elementImages.get(i).getClass() != MeasureImage.class) {
+				if (elementImages.get(i).getClass() == NoteImage.class) {
+					notes.add(getNote((NoteImage) elementImages.get(i),
+							attributes));
+				} else if (elementImages.get(i).getClass() == NoteImage.class) {
+					notes.add(getRest((RestImage) elementImages.get(i)));
+				}
 			}
 			i++;
 
 			// Get all notes in a measure
 			for (; i < elementImages.size()
-					&& elementImages.get(i).getClass() == NoteImage.class; i++) {
-
-				notes.add(getNote((NoteImage) elementImages.get(i), attributes));
+					&& elementImages.get(i).getClass() != MeasureImage.class; i++) {
+				if (elementImages.get(i).getClass() == NoteImage.class) {
+					notes.add(getNote((NoteImage) elementImages.get(i),
+							attributes));
+				} else if (elementImages.get(i).getClass() == RestImage.class) {
+					notes.add(getRest((RestImage) elementImages.get(i)));
+				}
 			}
 
 			int width = 20;
@@ -80,9 +90,11 @@ public class MusicInitializer {
 		// TODO Compute Stem
 		// TODO Notation
 
-		int duration = 2;
+		int duration = 0;
 		if (noteImage.getType() == Type.EIGHTH) {
-			duration = 1;
+			duration = 4;
+		} else if (noteImage.getType() == Type.QUARTER) {
+			duration = 8;
 		}
 		ArrayList<Beam> beams = new ArrayList<Beam>();
 		Beam beam = noteImage.getBeam();
@@ -91,8 +103,27 @@ public class MusicInitializer {
 
 		Note note = new Note(noteImage.getX(), pitch, duration, 3,
 				noteImage.getType(), new Stem(7, Stem.UP), 1, beams,
-				new ArrayList<Notation>());
+				new ArrayList<Notation>(), Note.NOTE);
 
 		return note;
+	}
+
+	private Note getRest(RestImage restImage) {
+		int duration = 0;
+		if (restImage.getType() == Type.EIGHTH) {
+			duration = 4;
+		} else if (restImage.getType() == Type.QUARTER) {
+			duration = 8;
+		} else if (restImage.getType() == Type.HALF) {
+			duration = 16;
+		} else if (restImage.getType() == Type.WHOLE) {
+			duration = 32;
+		} else if (restImage.getType() == Type.DOUBLE) {
+			duration = 64;
+		} else if (restImage.getType() == Type.QUADRUPLE) {
+			duration = 128;
+		}
+		return new Note(restImage.getX(), null, duration, 3,
+				restImage.getType(), null, 1, null, null, Note.REST);
 	}
 }

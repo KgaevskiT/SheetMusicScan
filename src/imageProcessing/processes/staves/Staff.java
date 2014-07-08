@@ -18,6 +18,10 @@ public class Staff {
 		this.lines = lines;
 	}
 
+	public int getLine(int line) {
+		return this.lines[line];
+	}
+
 	public int[] getLines() {
 		return lines;
 	}

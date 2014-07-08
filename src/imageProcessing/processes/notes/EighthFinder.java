@@ -2,14 +2,10 @@ package imageProcessing.processes.notes;
 
 import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
+import imageProcessing.tools.Tools;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import music.Beam;
 import music.Type;
@@ -56,25 +52,21 @@ public class EighthFinder {
 				}
 			}
 		}
-		// TODO debug
-		try {
-			ImageIO.write(this.image, "png", new File("Eighths.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		// Delete black notes in main image
+		Tools.replaceColor(image, VisualMode.EIGHTH, VisualMode.BACKGROUND);
 		return this.notes;
 	}
 
 	private void getEighths(int x, int y) {
 		if (this.image.getRGB(x, y) == VisualMode.OBJECT.getRGB()) {
-			this.image.setRGB(x, y, Color.ORANGE.getRGB());
+			this.image.setRGB(x, y, VisualMode.EIGHTH.getRGB());
 			getEighths(x + 1, y);
 			getEighths(x - 1, y);
 			getEighths(x, y + 1);
 			getEighths(x, y - 1);
-		} else if (this.image.getRGB(x, y) == Color.RED.getRGB()) {
-			this.image.setRGB(x, y, Color.ORANGE.getRGB());
+		} else if (this.image.getRGB(x, y) == VisualMode.QUARTER.getRGB()) {
+			this.image.setRGB(x, y, VisualMode.EIGHTH.getRGB());
 			ElementImage.addElt(eighths, this.notes.get(searchNote(x, y)));
 		}
 	}

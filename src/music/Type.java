@@ -6,6 +6,9 @@ import java.io.IOException;
 import music.xmlWriting.XMLWritable;
 
 public class Type implements XMLWritable {
+	public static Type QUADRUPLE = new Type("quadruple whole");
+	public static Type DOUBLE = new Type("double whole");
+	public static Type WHOLE = new Type("whole");
 	public static Type HALF = new Type("half");
 	public static Type QUARTER = new Type("quarter");
 	public static Type EIGHTH = new Type("eighth");
@@ -17,6 +20,11 @@ public class Type implements XMLWritable {
 	}
 
 	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public String toString() {
 		return this.value;
 	}
 

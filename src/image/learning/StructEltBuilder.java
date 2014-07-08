@@ -86,11 +86,29 @@ public class StructEltBuilder {
 		LearningParameter parameter;
 
 		switch (type) {
+		case "measure":
+			parameter = LearningParameter.MEASURE;
+			break;
 		case "quarter":
 			parameter = LearningParameter.QUARTER;
 			break;
-		case "measure":
-			parameter = LearningParameter.MEASURE;
+		case "whole":
+			parameter = LearningParameter.WHOLE;
+			break;
+		case "long":
+			parameter = LearningParameter.LONG;
+			break;
+		case "breve":
+			parameter = LearningParameter.BREVE;
+			break;
+		case "minim_semibreve":
+			parameter = LearningParameter.MINIM_SEMIBREVE;
+			break;
+		case "crotchet":
+			parameter = LearningParameter.CROTCHET;
+			break;
+		case "quaver":
+			parameter = LearningParameter.QUAVER;
 			break;
 		default:
 			parameter = null;

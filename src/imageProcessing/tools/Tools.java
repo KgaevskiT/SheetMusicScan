@@ -51,7 +51,7 @@ public class Tools {
 
 		for (int h = 0; h < image.getHeight(); h++) {
 			for (int w = 0; w < image.getWidth(); w++) {
-				if (image.getRGB(w, h) == Color.white.getRGB()) {
+				if (image.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
 					if (w < startX)
 						startX = w;
 					if (w > endX)
@@ -79,12 +79,14 @@ public class Tools {
 
 	public static void objectSetColor(BufferedImage image, int x, int y,
 			Color color) {
-		if (image.getRGB(x, y) == VisualMode.OBJECT.getRGB()) {
-			image.setRGB(x, y, color.getRGB());
-			objectSetColor(image, x, y - 1, color);
-			objectSetColor(image, x, y + 1, color);
-			objectSetColor(image, x + 1, y, color);
-			objectSetColor(image, x - 1, y, color);
+		if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+			if (image.getRGB(x, y) == VisualMode.OBJECT.getRGB()) {
+				image.setRGB(x, y, color.getRGB());
+				objectSetColor(image, x, y - 1, color);
+				objectSetColor(image, x, y + 1, color);
+				objectSetColor(image, x + 1, y, color);
+				objectSetColor(image, x - 1, y, color);
+			}
 		}
 	}
 
@@ -100,5 +102,15 @@ public class Tools {
 			}
 		}
 
+	}
+
+	public static void replaceColor(BufferedImage image, Color from, Color to) {
+		for (int h = 0; h < image.getHeight(); h++) {
+			for (int w = 0; w < image.getWidth(); w++) {
+				if (image.getRGB(w, h) == from.getRGB()) {
+					image.setRGB(w, h, to.getRGB());
+				}
+			}
+		}
 	}
 }

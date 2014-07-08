@@ -17,7 +17,7 @@ import timer.Timer;
 
 public class Main {
 
-	static String testImage = "Training_BW/BW_0004.png";
+	static String testImage = "Training_BW/BW_0002.png";
 
 	// static String testImage = "Training_BW/BW_0022.png";
 
