@@ -2,7 +2,7 @@ package imageProcessing.processes.notes;
 
 import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
-import imageProcessing.tools.Tools;
+import imageProcessing.tools.ObjectEditor;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -54,7 +54,8 @@ public class EighthFinder {
 		}
 
 		// Delete black notes in main image
-		Tools.replaceColor(image, VisualMode.EIGHTH, VisualMode.BACKGROUND);
+		new ObjectEditor().replaceColor(image, VisualMode.EIGHTH,
+				VisualMode.BACKGROUND);
 		return this.notes;
 	}
 

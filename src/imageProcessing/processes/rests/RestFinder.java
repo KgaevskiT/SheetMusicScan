@@ -6,7 +6,7 @@ import imageProcessing.filters.structElt.StructElt;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.staves.Staff;
 import imageProcessing.processes.staves.StavesAnalyzer;
-import imageProcessing.tools.Tools;
+import imageProcessing.tools.ObjectEditor;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class RestFinder {
 						RestImage rest = new RestImage(w, h, staff, staff
 								* image.getWidth() + w, Type.DOUBLE);
 						ElementImage.addElt(rests, rest);
-						Tools.eraseShape(image, w, h);
+						new ObjectEditor().eraseShape(image, w, h);
 					}
 				}
 			}
@@ -56,7 +56,7 @@ public class RestFinder {
 						RestImage rest = new RestImage(w, h, staff, staff
 								* image.getWidth() + w, Type.QUARTER);
 						ElementImage.addElt(rests, rest);
-						Tools.eraseShape(image, w, h);
+						new ObjectEditor().eraseShape(image, w, h);
 					}
 				}
 			}
@@ -75,7 +75,7 @@ public class RestFinder {
 						RestImage rest = new RestImage(w, h, staff, staff
 								* image.getWidth() + w, Type.QUADRUPLE);
 						ElementImage.addElt(rests, rest);
-						Tools.eraseShape(image, w, h);
+						new ObjectEditor().eraseShape(image, w, h);
 					}
 				}
 			}
@@ -96,7 +96,7 @@ public class RestFinder {
 						RestImage rest = new RestImage(w, h, staffNb, staffNb
 								* image.getWidth() + w, type);
 						ElementImage.addElt(rests, rest);
-						Tools.eraseShape(image, w, h);
+						new ObjectEditor().eraseShape(image, w, h);
 					}
 				}
 			}
@@ -115,7 +115,7 @@ public class RestFinder {
 						RestImage rest = new RestImage(w, h, staff, staff
 								* image.getWidth() + w, Type.EIGHTH);
 						ElementImage.addElt(rests, rest);
-						Tools.eraseShape(image, w, h);
+						new ObjectEditor().eraseShape(image, w, h);
 					}
 				}
 			}

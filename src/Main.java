@@ -16,36 +16,43 @@ import music.xmlWriting.MusicXMLWriter;
 import timer.Timer;
 
 public class Main {
-
-	static String testImage = "Training_BW/BW_0002.png";
-
-	// static String testImage = "Training_BW/BW_0022.png";
+	private static String usage = "Usage: java -jar SheetMusicScan image";
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		long tStart = System.currentTimeMillis();
+		if (args.length == 0) {
+			System.err.println(usage);
+			System.exit(1);
+		}
 
-		File input = new File(testImage);
+		Timer timer = new Timer();
+		File input = new File(args[0]);
+
+		if (!input.exists()) {
+			System.err.println("Error: File do not exist: " + args[0]);
+			System.exit(1);
+		}
+
 		String name = input.getName();
+		name = name.substring(0, name.length() - 4);
+
 		VisualMode.enable = true;
+		VisualMode.name = name;
+
 		try {
 			BufferedImage image = ImageIO.read(input);
-
 			writeMusicXML(image, name);
-
 		} catch (IOException e) {
-			System.err.println("Error: Couldn't read image : " + testImage);
+			System.err.println("Error: Couldn't read image: " + args[0]);
 			e.printStackTrace();
 		}
 
-		long tEnd = System.currentTimeMillis();
-		System.out.println("Time elapsed: "
-				+ Timer.getTimeElapsed(tStart, tEnd));
+		timer.step("Total time ");
 	}
 
-	public static void writeMusicXML(BufferedImage image, String name) {
+	private static void writeMusicXML(BufferedImage image, String name) {
 		ImageReader imageReader = new ImageReader();
 		ArrayList<ElementImage> elementImage = imageReader
 				.getElementImages(image);
@@ -57,6 +64,6 @@ public class Main {
 				elementImage);
 
 		MusicXMLWriter xmlWriter = new MusicXMLWriter();
-		xmlWriter.writeMusicXML("music.xml", partwise);
+		xmlWriter.writeMusicXML(name + ".xml", partwise);
 	}
 }

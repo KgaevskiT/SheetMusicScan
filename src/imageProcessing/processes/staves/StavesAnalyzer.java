@@ -1,5 +1,6 @@
 package imageProcessing.processes.staves;
 
+import imageProcessing.colorMode.VisualMode;
 import imageProcessing.filters.Dilation;
 import imageProcessing.filters.Erosion;
 import imageProcessing.filters.structElt.StructElt;
@@ -12,7 +13,7 @@ public class StavesAnalyzer {
 	public static BufferedImage completeStaves(BufferedImage image) {
 		Erosion erosion = new Erosion(StructElt.LineHorizontal10);
 		image = erosion.apply(image);
-		Dilation dilation = new Dilation(StructElt.LineHorizontal50);
+		Dilation dilation = new Dilation(StructElt.LineHorizontal100);
 		image = dilation.apply(image);
 		return image;
 	}
@@ -34,11 +35,12 @@ public class StavesAnalyzer {
 		return staffNb;
 	}
 
+	private final BufferedImage stavesImageFull;
 	private BufferedImage stavesImage;
 
 	public StavesAnalyzer(BufferedImage stavesImage) {
-		this.stavesImage = stavesImage;
-		this.stavesImage = getSubimage(this.stavesImage);
+		this.stavesImageFull = stavesImage;
+		this.stavesImage = getSubimage(stavesImage);
 		this.stavesImage = completeStaves(this.stavesImage);
 	}
 
@@ -74,7 +76,26 @@ public class StavesAnalyzer {
 			}
 		}
 
+		findStavesStart(staves);
 		return staves;
+	}
+
+	private void findStavesStart(ArrayList<Staff> staves) {
+		for (Staff staff : staves) {
+			boolean lineFound = false;
+			int x = 0;
+			int y = staff.getLine(2);
+
+			for (x = 0; !lineFound; x++) {
+				for (int i = -5; i <= 5; i++) {
+					if (this.stavesImageFull.getRGB(x, y) != VisualMode.BACKGROUND
+							.getRGB()) {
+						lineFound = true;
+					}
+				}
+			}
+			staff.setBegin(x);
+		}
 	}
 
 	private BufferedImage getSubimage(BufferedImage image) {

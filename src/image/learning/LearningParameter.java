@@ -1,18 +1,18 @@
 package image.learning;
 
 public class LearningParameter {
-	public static LearningParameter MEASURE = new LearningParameter(0, 30, 200);
+	public static LearningParameter MEASURE = new LearningParameter(25, 30, 200);
 	// Notes
-	public static LearningParameter QUARTER = new LearningParameter(32, 50, 50);
-	public static LearningParameter WHOLE = new LearningParameter(25, 50, 50);
+	public static LearningParameter QUARTER = new LearningParameter(50, 50, 50);
+	public static LearningParameter WHOLE = new LearningParameter(50, 50, 50);
 	// Rests
 	public static LearningParameter LONG = new LearningParameter(0, 75, 75);
 	public static LearningParameter BREVE = new LearningParameter(0, 75, 75);
 	public static LearningParameter MINIM_SEMIBREVE = new LearningParameter(25,
 			75, 75);
-	public static LearningParameter CROTCHET = new LearningParameter(0, 150,
+	public static LearningParameter CROTCHET = new LearningParameter(50, 150,
 			150);
-	public static LearningParameter QUAVER = new LearningParameter(24, 100, 100);
+	public static LearningParameter QUAVER = new LearningParameter(50, 100, 100);
 
 	private final int step;
 	private final int width;

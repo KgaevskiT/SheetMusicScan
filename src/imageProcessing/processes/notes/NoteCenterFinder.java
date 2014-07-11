@@ -1,6 +1,6 @@
 package imageProcessing.processes.notes;
 
-import imageProcessing.tools.Tools;
+import imageProcessing.tools.ObjectEditor;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -71,15 +71,8 @@ public class NoteCenterFinder {
 			;
 		y = (h + y) / 2;
 
-		Point center;
-
-		// TODO Currently not computing optimal point (maybe not useful)
-		// computing real optimal point
-		/*
-		 * Point center = new Point(findBestX(x, y), findBestY(x, y));
-		 */
-		center = new Point(x, y);
-		Tools.eraseShape(this.image, center.x, center.y);
+		Point center = new Point(x, y);
+		new ObjectEditor().eraseShape(this.image, center.x, center.y);
 		return center;
 	}
 

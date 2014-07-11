@@ -1,6 +1,8 @@
 package imageProcessing.processes;
 
 import imageProcessing.colorMode.VisualMode;
+import imageProcessing.filters.NoiseClosing;
+import imageProcessing.filters.NoiseOpening;
 import imageProcessing.processes.clefs.ClefFinder;
 import imageProcessing.processes.measures.MeasureFinder;
 import imageProcessing.processes.measures.MeasureImage;
@@ -13,7 +15,11 @@ import imageProcessing.processes.staves.StavesAnalyzer;
 import imageProcessing.processes.staves.StavesEraser;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import timer.Timer;
 
@@ -60,13 +66,20 @@ public class ImageReader {
 		image = stavesEraser.EraseStaves(image);
 		timer.step("[Main] Erase staves");
 
+		// TODO debug
+		try {
+			ImageIO.write(image, "png", new File("image.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		// Delete staves
 		BufferedImage stavesImage = stavesEraser.getStaffs();
 		StavesAnalyzer stavesAnalyzer = new StavesAnalyzer(stavesImage);
-		timer.step("[Main] Delete staves");
+		timer.step("[Main] Post-computing staves");
 
 		// Get staves for visual
-		VisualMode visualMode;
 		if (VisualMode.enable) {
 			Timer t = new Timer();
 			VisualMode.addStaves(stavesImage, image);
@@ -85,8 +98,8 @@ public class ImageReader {
 		timer.step("[Main] Get measure bars");
 
 		// Delete noise
-		// image = new NoiseClosing().apply(image);
-		// image = new NoiseOpening().apply(image);
+		image = new NoiseClosing().apply(image);
+		image = new NoiseOpening().apply(image);
 
 		// Get clefs TODO !
 		ClefFinder clefFinder = new ClefFinder(staves, image);

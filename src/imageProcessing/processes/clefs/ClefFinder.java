@@ -3,7 +3,7 @@ package imageProcessing.processes.clefs;
 import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.staves.Staff;
-import imageProcessing.tools.Tools;
+import imageProcessing.tools.ObjectEditor;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -22,14 +22,15 @@ public class ClefFinder {
 		ArrayList<ElementImage> clefs = new ArrayList<ElementImage>();
 		int staffNb = 0;
 		for (Staff staff : this.staves) {
-			int x = 0;
+			int x = staff.getBegin();
 			int y = staff.getLine(2);
-			for (x = 0; image.getRGB(x, y) == VisualMode.BACKGROUND.getRGB(); x++)
+			for (; image.getRGB(x, y) == VisualMode.BACKGROUND.getRGB(); x++)
 				;
+
 			// TODO: get Clef info
 			clefs.add(new ClefImage(x, y, staffNb, staffNb * image.getWidth()
 					+ x));
-			Tools.eraseShape(image, x, y);
+			new ObjectEditor().eraseShape(image, x, y);
 
 			staffNb++;
 		}

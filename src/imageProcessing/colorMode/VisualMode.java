@@ -5,7 +5,7 @@ import imageProcessing.processes.clefs.ClefImage;
 import imageProcessing.processes.measures.MeasureImage;
 import imageProcessing.processes.notes.NoteImage;
 import imageProcessing.processes.rests.RestImage;
-import imageProcessing.processes.staves.StavesAnalyzer;
+import imageProcessing.tools.ObjectEditor;
 import imageProcessing.tools.Tools;
 
 import java.awt.Color;
@@ -21,6 +21,7 @@ import timer.Timer;
 
 public class VisualMode {
 	public static boolean enable;
+	public static String name;
 	private BufferedImage image;
 	Timer extra = new Timer();
 
@@ -50,15 +51,15 @@ public class VisualMode {
 	public static void addClefs(ArrayList<ElementImage> clefs) {
 		for (ElementImage elt : clefs) {
 			ClefImage clef = (ClefImage) elt;
-			Tools.objectSetColor(instance.image, clef.getX(), clef.getY(),
-					VisualMode.CLEF);
+			new ObjectEditor().objectSetColor(instance.image, clef.getX(),
+					clef.getY(), VisualMode.CLEF);
 		}
 	}
 
 	public static void addMeasures(ArrayList<ElementImage> measures) {
 		for (ElementImage elt : measures) {
 			MeasureImage measure = (MeasureImage) elt;
-			Tools.objectSetColor(instance.image, measure.getX(),
+			new ObjectEditor().objectSetColor(instance.image, measure.getX(),
 					measure.getY(), VisualMode.MEASURE);
 		}
 	}
@@ -67,17 +68,17 @@ public class VisualMode {
 		for (ElementImage elt : notes) {
 			NoteImage note = (NoteImage) elt;
 			if (note.getType() == Type.WHOLE) {
-				Tools.objectSetColor(instance.image, note.getX(), note.getY(),
-						VisualMode.WHOLE);
+				new ObjectEditor().objectSetColor(instance.image, note.getX(),
+						note.getY(), VisualMode.WHOLE, NOTE_RADIUS);
 			} else if (note.getType() == Type.HALF) {
-				Tools.objectSetColor(instance.image, note.getX(), note.getY(),
-						VisualMode.HALF);
+				new ObjectEditor().objectSetColor(instance.image, note.getX(),
+						note.getY(), VisualMode.HALF, NOTE_RADIUS);
 			} else if (note.getType() == Type.QUARTER) {
-				Tools.objectSetColor(instance.image, note.getX(), note.getY(),
-						VisualMode.QUARTER); // , NOTE_RADIUS);
+				new ObjectEditor().objectSetColor(instance.image, note.getX(),
+						note.getY(), VisualMode.QUARTER, NOTE_RADIUS);
 			} else if (note.getType() == Type.EIGHTH) {
-				Tools.objectSetColor(instance.image, note.getX(), note.getY(),
-						VisualMode.EIGHTH);
+				new ObjectEditor().objectSetColor(instance.image, note.getX(),
+						note.getY(), VisualMode.EIGHTH, NOTE_RADIUS);
 			} else {
 				System.err.print("Error: Unknown note type ["
 						+ note.getType().getValue() + "]");
@@ -90,29 +91,29 @@ public class VisualMode {
 			RestImage rest = (RestImage) elt;
 
 			if (rest.getType() == Type.QUADRUPLE) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.LONG);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.LONG);
 			} else if (rest.getType() == Type.DOUBLE) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.BREVE);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.BREVE);
 			} else if (rest.getType() == Type.WHOLE) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.SEMIBREVE);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.SEMIBREVE);
 			} else if (rest.getType() == Type.HALF) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.MINIM);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.MINIM);
 			} else if (rest.getType() == Type.QUARTER) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.CROTCHET);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.CROTCHET);
 			} else if (rest.getType() == Type.EIGHTH) {
-				Tools.objectSetColor(instance.image, rest.getX(), rest.getY(),
-						VisualMode.QUAVER);
+				new ObjectEditor().objectSetColor(instance.image, rest.getX(),
+						rest.getY(), VisualMode.QUAVER);
 			}
 		}
 	}
 
 	public static void addStaves(BufferedImage staves, BufferedImage content) {
-		instance.image = StavesAnalyzer.completeStaves(staves);
+		instance.image = staves;
 		replace(instance.image, VisualMode.OBJECT, VisualMode.STAVES);
 		Tools.merge(instance.image, content);
 	}
@@ -133,7 +134,7 @@ public class VisualMode {
 
 	public static void save() {
 		try {
-			ImageIO.write(instance.image, "png", new File("output.png"));
+			ImageIO.write(instance.image, "png", new File(name + ".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

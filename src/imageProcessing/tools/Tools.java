@@ -15,26 +15,6 @@ public class Tools {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
-	public static void eraseObjectParts(BufferedImage parts, int x, int y,
-			BufferedImage image) {
-		if (image.getRGB(x, y) == VisualMode.OBJECT.getRGB()) {
-			parts.setRGB(x, y, VisualMode.BACKGROUND.getRGB());
-			image.setRGB(x, y, VisualMode.BACKGROUND.getRGB());
-			eraseObjectParts(parts, x, y - 1, image);
-			eraseObjectParts(parts, x, y + 1, image);
-			eraseObjectParts(parts, x + 1, y, image);
-			eraseObjectParts(parts, x - 1, y, image);
-		}
-	}
-
-	public static void eraseShape(BufferedImage image, int x, int y) {
-		objectSetColor(image, x, y, VisualMode.BACKGROUND);
-	}
-
-	private static double euclidianDistance(int x1, int x2, int y1, int y2) {
-		return Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2);
-	}
-
 	public static void fill(BufferedImage image, Color color) {
 		for (int h = 0; h < image.getHeight(); h++) {
 			for (int w = 0; w < image.getWidth(); w++) {
@@ -72,43 +52,6 @@ public class Tools {
 			for (int w = 0; w < base.getWidth() && w < base.getWidth(); w++) {
 				if (mask.getRGB(w, h) != VisualMode.BACKGROUND.getRGB()) {
 					base.setRGB(w, h, mask.getRGB(w, h));
-				}
-			}
-		}
-	}
-
-	public static void objectSetColor(BufferedImage image, int x, int y,
-			Color color) {
-		if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-			if (image.getRGB(x, y) == VisualMode.OBJECT.getRGB()) {
-				image.setRGB(x, y, color.getRGB());
-				objectSetColor(image, x, y - 1, color);
-				objectSetColor(image, x, y + 1, color);
-				objectSetColor(image, x + 1, y, color);
-				objectSetColor(image, x - 1, y, color);
-			}
-		}
-	}
-
-	public static void objectSetColor(BufferedImage image, int x, int y,
-			Color color, int rad) {
-		for (int h = y - rad; h < y + rad; h++) {
-			for (int w = x - rad; w < x + rad; w++) {
-				if (euclidianDistance(x, w, y, h) < rad * rad) {
-					if (image.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
-						image.setRGB(w, h, color.getRGB());
-					}
-				}
-			}
-		}
-
-	}
-
-	public static void replaceColor(BufferedImage image, Color from, Color to) {
-		for (int h = 0; h < image.getHeight(); h++) {
-			for (int w = 0; w < image.getWidth(); w++) {
-				if (image.getRGB(w, h) == from.getRGB()) {
-					image.setRGB(w, h, to.getRGB());
 				}
 			}
 		}

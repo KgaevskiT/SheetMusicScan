@@ -34,9 +34,9 @@ public class StructEltBuilder {
 				for (int h = 0; h < image.getHeight(); h++) {
 					for (int w = 0; w < image.getWidth(); w++) {
 						if (image.getRGB(w, h) == Color.WHITE.getRGB()) {
-							int red = new Color(mean.getRGB(w, h)).getRed();
-							red = red - weight < 0 ? 0 : red - weight;
-							Color color = new Color(red, 0, 0);
+							int grey = new Color(mean.getRGB(w, h)).getRed();
+							grey = grey - weight < 0 ? 0 : grey - weight;
+							Color color = new Color(grey, grey, grey);
 							mean.setRGB(w, h, color.getRGB());
 						}
 					}

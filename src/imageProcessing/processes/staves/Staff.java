@@ -10,6 +10,8 @@ public class Staff {
 	 */
 	private final int lines[];
 
+	private int begin;
+
 	public Staff(int line5, int line4, int line3, int line2, int line1) {
 		this.lines = new int[] { line1, line2, line3, line4, line5 };
 	}
@@ -18,12 +20,20 @@ public class Staff {
 		this.lines = lines;
 	}
 
+	public int getBegin() {
+		return this.begin;
+	}
+
 	public int getLine(int line) {
 		return this.lines[line];
 	}
 
 	public int[] getLines() {
 		return lines;
+	}
+
+	public void setBegin(int x) {
+		this.begin = x;
 	}
 
 	@Override
