@@ -137,7 +137,7 @@ public class ImageReader {
 			VisualMode.addNotes(blackNoteImages);
 			VisualMode.addRests(restImages);
 			VisualMode.save();
-			t.step("\t[ColorMode] Color elements (Measures, Quarter, Half)");
+			t.step("\t[ColorMode] Color elements (Measures, Clefs, Notes, Rests)");
 			timer.step();
 		}
 

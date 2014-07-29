@@ -7,6 +7,7 @@ import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.staves.Staff;
 import imageProcessing.processes.staves.StavesAnalyzer;
 import imageProcessing.tools.ObjectEditor;
+import imageProcessing.tools.ObjectSize;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -58,18 +59,19 @@ public class RestFinder {
 						ElementImage.addElt(rests, rest);
 						new ObjectEditor().eraseShape(image, w, h);
 					}
+					new ObjectEditor().eraseShape(crotchetsImage, w, h);
 				}
 			}
 		}
 	}
 
 	private void findLongs() {
-		BufferedImage crotchetsImage = new Erosion(StructElt.LONG)
+		BufferedImage longsImage = new Erosion(StructElt.LONG)
 				.apply(this.image);
 
 		for (int h = 0; h < image.getHeight(); h++) {
 			for (int w = 0; w < image.getWidth(); w++) {
-				if (crotchetsImage.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
+				if (longsImage.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
 					Integer staff = StavesAnalyzer.getStaffNumber(staves, h);
 					if (staff != null) {
 						RestImage rest = new RestImage(w, h, staff, staff
@@ -77,18 +79,20 @@ public class RestFinder {
 						ElementImage.addElt(rests, rest);
 						new ObjectEditor().eraseShape(image, w, h);
 					}
+					new ObjectEditor().eraseShape(longsImage, w, h);
 				}
 			}
 		}
 	}
 
 	private void findMinimSemibreves() {
-		BufferedImage crotchetsImage = new Erosion(StructElt.MINIM_SEMIBREVE)
-				.apply(this.image);
+		BufferedImage minimSemibrevesImage = new Erosion(
+				StructElt.MINIM_SEMIBREVE).apply(this.image);
 
 		for (int h = 0; h < image.getHeight(); h++) {
 			for (int w = 0; w < image.getWidth(); w++) {
-				if (crotchetsImage.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
+				if (minimSemibrevesImage.getRGB(w, h) == VisualMode.OBJECT
+						.getRGB()) {
 					Integer staffNb = StavesAnalyzer.getStaffNumber(staves, h);
 					if (staffNb != null) {
 						Type type = getType(staffNb, w, h);
@@ -98,25 +102,36 @@ public class RestFinder {
 						ElementImage.addElt(rests, rest);
 						new ObjectEditor().eraseShape(image, w, h);
 					}
+					new ObjectEditor().eraseShape(minimSemibrevesImage, w, h);
 				}
 			}
 		}
 	}
 
 	private void findQuavers() {
-		BufferedImage crotchetsImage = new Erosion(StructElt.QUAVER)
+		BufferedImage quaversImage = new Erosion(StructElt.QUAVER)
 				.apply(this.image);
 
 		for (int h = 0; h < image.getHeight(); h++) {
 			for (int w = 0; w < image.getWidth(); w++) {
-				if (crotchetsImage.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
+				if (quaversImage.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
 					Integer staff = StavesAnalyzer.getStaffNumber(staves, h);
 					if (staff != null) {
-						RestImage rest = new RestImage(w, h, staff, staff
-								* image.getWidth() + w, Type.EIGHTH);
-						ElementImage.addElt(rests, rest);
-						new ObjectEditor().eraseShape(image, w, h);
+						ObjectSize objectSize = new ObjectSize();
+						int height = objectSize
+								.getObjectHeight(image, w, h, 60);
+						int width = objectSize.getObjectWidth(image, w, h, 40);
+
+						if (height != 0 && height < 60 && width != 0
+								&& width < 40) {
+
+							RestImage rest = new RestImage(w, h, staff, staff
+									* image.getWidth() + w, Type.EIGHTH);
+							ElementImage.addElt(rests, rest);
+							new ObjectEditor().eraseShape(image, w, h);
+						}
 					}
+					new ObjectEditor().eraseShape(quaversImage, w, h);
 				}
 			}
 		}
