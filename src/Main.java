@@ -1,6 +1,7 @@
 import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.ImageReader;
+import parallelism.FilesScanner;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,14 +27,45 @@ public class Main {
 			System.err.println(usage);
 			System.exit(1);
 		}
-
-		Timer timer = new Timer();
-		File input = new File(args[0]);
-
-		if (!input.exists()) {
-			System.err.println("Error: File do not exist: " + args[0]);
+		
+		switch(args.length)
+		{
+	
+		case 1 :
+			oneFile(new File(args[0]));
+			break;
+		
+		case 2 :
+			if (args[0].compareTo("-r") != 0)
+			{
+				System.err.println(usage);
+				System.exit(1);
+			}
+			else
+				multipleFiles(new File(args[1]));
+			break;
+			
+		default :
+			System.err.println(usage);
 			System.exit(1);
+			break;
+			
 		}
+	}
+	
+	private static void multipleFiles(File rep)
+	{
+		ArrayList<File> allFiles = FilesScanner.getFilesInRep(rep);
+		for (File oneFile : allFiles)
+		{
+			oneFile(oneFile);
+		}
+		/* TODO threading */
+	}
+	
+	private static void oneFile(File input)
+	{
+		Timer timer = new Timer();
 
 		String name = input.getName();
 		name = name.substring(0, name.length() - 4);
@@ -45,7 +77,7 @@ public class Main {
 			BufferedImage image = ImageIO.read(input);
 			writeMusicXML(image, name);
 		} catch (IOException e) {
-			System.err.println("Error: Couldn't read image: " + args[0]);
+			System.err.println("Error: Couldn't read image: " + input.getName());
 			e.printStackTrace();
 		}
 
