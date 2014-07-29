@@ -18,7 +18,6 @@ public class ObjectEditor {
 	}
 
 	private void eraseObjectPartsRec(int x, int y) {
-		System.out.println(new Color(image.getRGB(x, y)).toString());
 		if (image.getRGB(x, y) != VisualMode.BACKGROUND.getRGB()) {
 			parts.setRGB(x, y, VisualMode.BACKGROUND.getRGB());
 			image.setRGB(x, y, VisualMode.BACKGROUND.getRGB());
