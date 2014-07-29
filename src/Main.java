@@ -2,22 +2,26 @@ import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.ImageReader;
 import parallelism.FilesScanner;
+import parallelism.MultipleTasks;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
 
 import javax.imageio.ImageIO;
 
 import music.Attributes;
 import music.ScorePartwise;
 import music.initializer.MusicInitializer;
+import music.initializer.MusicInitializer.PartsAndTitle;
 import music.xmlWriting.MusicXMLWriter;
 import timer.Timer;
 
 public class Main {
-	private static String usage = "Usage: java -jar SheetMusicScan image";
+	private static String usage = "Usage: java -jar SheetMusicScan [-r] (image/forlder)";
 
 	/**
 	 * @param args
@@ -55,12 +59,19 @@ public class Main {
 	
 	private static void multipleFiles(File rep)
 	{
-		ArrayList<File> allFiles = FilesScanner.getFilesInRep(rep);
-		for (File oneFile : allFiles)
-		{
-			oneFile(oneFile);
-		}
-		/* TODO threading */
+		
+		//Nous récupérons le nombre de processeurs disponibles
+	    int processeurs = Runtime.getRuntime().availableProcessors();
+	    //Nous créons notre pool de thread pour nos tâches de fond
+	    ForkJoinPool pool = new ForkJoinPool(processeurs);
+	    MultipleTasks myTasks = new MultipleTasks(rep);
+	    
+	    Long start = System.currentTimeMillis();
+	    //Nous lançons le traitement de notre tâche principale via le pool
+	    pool.invoke(myTasks);
+	    
+	    Long end = System.currentTimeMillis();
+	    System.out.println("Temps de traitement : " + (end - start));   
 	}
 	
 	private static void oneFile(File input)
@@ -92,8 +103,11 @@ public class Main {
 		Attributes attributes = Attributes.DEFAULT_ATTRIBUTES;
 
 		MusicInitializer musicInitializer = new MusicInitializer();
-		ScorePartwise partwise = musicInitializer.getMusic(name, attributes,
+		PartsAndTitle partsAndTitle = musicInitializer.getMusic(name, attributes,
 				elementImage);
+		// Partwise
+		ScorePartwise partwise = new ScorePartwise("1.0", partsAndTitle.getTitle(), partsAndTitle.getParts());
+
 
 		MusicXMLWriter xmlWriter = new MusicXMLWriter();
 		xmlWriter.writeMusicXML(name + ".xml", partwise);
