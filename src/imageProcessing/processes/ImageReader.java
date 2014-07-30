@@ -66,13 +66,15 @@ public class ImageReader {
 		image = stavesEraser.EraseStaves(image);
 		timer.step("[Main] Erase staves");
 
-		// TODO debug
+		// TODO debug -> crash if multitasked
+		/*
 		try {
 			ImageIO.write(image, "png", new File("image.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 
 		// Delete staves
 		BufferedImage stavesImage = stavesEraser.getStaffs();

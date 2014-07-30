@@ -1,7 +1,6 @@
 import imageProcessing.colorMode.VisualMode;
 import imageProcessing.processes.ElementImage;
 import imageProcessing.processes.ImageReader;
-import parallelism.FilesScanner;
 import parallelism.MultipleTasks;
 
 import java.awt.image.BufferedImage;
@@ -9,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
-
 import javax.imageio.ImageIO;
 
 import music.Attributes;
@@ -60,18 +57,16 @@ public class Main {
 	private static void multipleFiles(File rep)
 	{
 		
-		//Nous récupérons le nombre de processeurs disponibles
-	    int processeurs = Runtime.getRuntime().availableProcessors();
-	    //Nous créons notre pool de thread pour nos tâches de fond
-	    ForkJoinPool pool = new ForkJoinPool(processeurs);
+	    ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() + 1);
+	    // +1 car le premier pool ne fait qu'attendre les autres
 	    MultipleTasks myTasks = new MultipleTasks(rep);
 	    
 	    Long start = System.currentTimeMillis();
-	    //Nous lançons le traitement de notre tâche principale via le pool
+	    
 	    pool.invoke(myTasks);
 	    
 	    Long end = System.currentTimeMillis();
-	    System.out.println("Temps de traitement : " + (end - start));   
+	    System.out.println("Temps de traitement : " + (end - start));
 	}
 	
 	private static void oneFile(File input)

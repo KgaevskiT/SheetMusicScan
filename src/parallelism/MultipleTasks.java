@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
@@ -28,7 +29,10 @@ public class MultipleTasks extends RecursiveTask<PartsAndTitle> {
 			allFiles = fs.getFilesInRep(file);
 			oneFile = file;
 		} else
+		{
 			oneFile = file;
+			allFiles = null;
+		}
 	}
 
 	private static final long serialVersionUID = 5558415781653492418L;
@@ -37,6 +41,7 @@ public class MultipleTasks extends RecursiveTask<PartsAndTitle> {
 
 	@Override
 	protected PartsAndTitle compute() {
+		
 		if (allFiles != null) {
 			MultipleTasks task;
 			List<MultipleTasks> tasks = new ArrayList<MultipleTasks>();
@@ -46,8 +51,11 @@ public class MultipleTasks extends RecursiveTask<PartsAndTitle> {
 				task.fork();
 			}
 			ArrayList<Part> listParts = new ArrayList<Part>();
+			List<Part> parts = Collections.synchronizedList(listParts);
 			for (MultipleTasks t : tasks)
-				listParts.addAll(t.join().getParts());
+			{
+				parts.addAll(t.join().getParts());
+			}
 
 			// Partwise
 			ScorePartwise partwise = new ScorePartwise("1.0",
