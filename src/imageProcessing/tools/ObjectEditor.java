@@ -39,16 +39,18 @@ public class ObjectEditor {
 
 	public BufferedImage objectSetColor(BufferedImage image, int x, int y,
 			Color color) {
+
 		this.image = image;
 		objectSetColorRec(x, y, color);
 		return this.image;
 	}
 
 	public BufferedImage objectSetColor(BufferedImage image, int x, int y,
-			Color color, int rad) {
-		for (int h = y - rad; h < y + rad; h++) {
-			for (int w = x - rad; w < x + rad; w++) {
-				if (euclidianDistance(x, w, y, h) < rad * rad) {
+			Color color, int radius) {
+
+		for (int h = y - radius; h < y + radius; h++) {
+			for (int w = x - radius; w < x + radius; w++) {
+				if (euclidianDistance(x, w, y, h) < radius * radius) {
 					if (image.getRGB(w, h) == VisualMode.OBJECT.getRGB()) {
 						image.setRGB(w, h, color.getRGB());
 					}
@@ -56,6 +58,14 @@ public class ObjectEditor {
 			}
 		}
 		return this.image;
+
+		/*
+		 * ColorSetter.IMAGE = image; ColorSetter.COLOR = color;
+		 * ColorSetter.RADIUS = radius; ColorSetter start = new ColorSetter(x,
+		 * y); int cores = Runtime.getRuntime().availableProcessors();
+		 * ForkJoinPool pool = new ForkJoinPool(cores); pool.invoke(start);
+		 * return ColorSetter.IMAGE;
+		 */
 	}
 
 	private void objectSetColorRec(int x, int y, Color color) {

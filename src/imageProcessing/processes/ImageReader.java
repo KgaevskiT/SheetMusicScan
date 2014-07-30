@@ -15,11 +15,7 @@ import imageProcessing.processes.staves.StavesAnalyzer;
 import imageProcessing.processes.staves.StavesEraser;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import timer.Timer;
 
@@ -66,14 +62,6 @@ public class ImageReader {
 		image = stavesEraser.EraseStaves(image);
 		timer.step("[Main] Erase staves");
 
-		// TODO debug
-		try {
-			ImageIO.write(image, "png", new File("image.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		// Delete staves
 		BufferedImage stavesImage = stavesEraser.getStaffs();
 		StavesAnalyzer stavesAnalyzer = new StavesAnalyzer(stavesImage);
@@ -100,6 +88,7 @@ public class ImageReader {
 		// Delete noise
 		image = new NoiseClosing().apply(image);
 		image = new NoiseOpening().apply(image);
+		timer.step("[Main] Delete noise");
 
 		// Get clefs TODO !
 		ClefFinder clefFinder = new ClefFinder(staves, image);
