@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class FilesScanner {
+	
+	public FilesScanner ()
+	{
+		initExtensions();
+	}
 
 	private static ArrayList<String> authorisedExtensions = new ArrayList<String>();
 
@@ -13,8 +18,7 @@ public class FilesScanner {
 		/* d'autres ? */
 	}
 
-	public static ArrayList<File> getFilesInRep(File folder) {
-		initExtensions();
+	public ArrayList<File> getFilesInRep(File folder) {
 
 		ArrayList<File> result = new ArrayList<File>();
 		File[] listOfFiles = folder.listFiles();

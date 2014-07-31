@@ -6,59 +6,50 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.imageio.ImageIO;
 
 import music.Attributes;
 import music.ScorePartwise;
 import music.initializer.MusicInitializer;
+import music.initializer.MusicInitializer.PartsAndTitle;
 import music.xmlWriting.MusicXMLWriter;
-import parallelism.FilesScanner;
+import parallelism.MultipleTasks;
 import parallelism.Parallelizer;
 import timer.Timer;
 
 public class Main {
-	private static String usage = "Usage: java -jar SheetMusicScan image";
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		if (args.length == 0) {
-			System.err.println(usage);
-			System.exit(1);
+		Option option = new Option(args);
+
+		if (option.parallel()) {
+			Parallelizer.setEnable(true);
 		}
-
-		Parallelizer.setEnable(true);
-
-		switch (args.length) {
-
-		case 1:
-			oneFile(new File(args[0]));
-			break;
-
-		case 2:
-			if (args[0].compareTo("-r") != 0) {
-				System.err.println(usage);
-				System.exit(1);
-			} else
-				multipleFiles(new File(args[1]));
-			break;
-
-		default:
-			System.err.println(usage);
-			System.exit(1);
-			break;
-
+		if (option.recursive()) {
+			File folder = option.getFile();
+			multipleFiles(folder);
+		} else {
+			File file = option.getFile();
+			oneFile(file);
 		}
 	}
 
 	private static void multipleFiles(File rep) {
-		ArrayList<File> allFiles = FilesScanner.getFilesInRep(rep);
-		for (File oneFile : allFiles) {
-			oneFile(oneFile);
-		}
-		/* TODO threading */
+
+		// Nous récupérons le nombre de processeurs disponibles
+		int processeurs = Runtime.getRuntime().availableProcessors();
+		// Nous créons notre pool de thread pour nos tâches de fond
+		ForkJoinPool pool = new ForkJoinPool(processeurs);
+		MultipleTasks myTasks = new MultipleTasks(rep);
+
+		Long start = System.currentTimeMillis();
+		// Nous lançons le traitement de notre tâche principale via le pool
+		pool.invoke(myTasks);
+
+		Long end = System.currentTimeMillis();
+		System.out.println("Temps de traitement : " + (end - start));
 	}
 
 	private static void oneFile(File input) {
@@ -90,8 +81,11 @@ public class Main {
 		Attributes attributes = Attributes.DEFAULT_ATTRIBUTES;
 
 		MusicInitializer musicInitializer = new MusicInitializer();
-		ScorePartwise partwise = musicInitializer.getMusic(name, attributes,
-				elementImage);
+		PartsAndTitle partsAndTitle = musicInitializer.getMusic(name,
+				attributes, elementImage);
+		// Partwise
+		ScorePartwise partwise = new ScorePartwise("1.0",
+				partsAndTitle.getTitle(), partsAndTitle.getParts());
 
 		MusicXMLWriter xmlWriter = new MusicXMLWriter();
 		xmlWriter.writeMusicXML(name + ".xml", partwise);

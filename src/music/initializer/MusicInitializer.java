@@ -68,8 +68,34 @@ public class MusicInitializer {
 
 		return measures;
 	}
+	
+	public class PartsAndTitle
+	{
+		ArrayList<Part> parts;
+		String title;
+		
+		public PartsAndTitle(ArrayList<Part> parts, String title)
+		{
+			this.parts = parts;
+			this.title = title;
+		}
 
-	public ScorePartwise getMusic(String title, Attributes attributes,
+		public ArrayList<Part> getParts() {
+			return parts;
+		}
+		public void setParts(ArrayList<Part> parts) {
+			this.parts = parts;
+		}
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+	}
+
+	public PartsAndTitle getMusic(String title, Attributes attributes,
 			ArrayList<ElementImage> elementImages) {
 
 		ArrayList<Part> parts = new ArrayList<Part>();
@@ -77,11 +103,10 @@ public class MusicInitializer {
 		// Part
 		ArrayList<Measure> measures = getMeasures(attributes, elementImages);
 		parts.add(new Part("P1", measures));
+		
+		PartsAndTitle result = new PartsAndTitle(parts, title);
 
-		// Partwise
-		ScorePartwise partwise = new ScorePartwise("1.0", title, parts);
-
-		return partwise;
+		return result;
 	}
 
 	private Note getNote(NoteImage noteImage, Attributes attributes) {
