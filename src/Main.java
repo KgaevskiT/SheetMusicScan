@@ -44,12 +44,12 @@ public class Main {
 		ForkJoinPool pool = new ForkJoinPool(processeurs);
 		MultipleTasks myTasks = new MultipleTasks(rep);
 
+		Timer timer = new Timer();
 		Long start = System.currentTimeMillis();
 		// Nous lançons le traitement de notre tâche principale via le pool
 		pool.invoke(myTasks);
 
-		Long end = System.currentTimeMillis();
-		System.out.println("Temps de traitement : " + (end - start));
+		timer.step("Total time ");
 	}
 
 	private static void oneFile(File input) {
@@ -70,7 +70,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		timer.step("Total time ");
+		timer.step("Total time");
 	}
 
 	private static void writeMusicXML(BufferedImage image, String name) {

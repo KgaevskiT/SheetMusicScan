@@ -29,7 +29,7 @@ public class DilationParallel extends RecursiveTask<BufferedImage> {
 			int wStruct = structElt.getImage().getWidth() / 2;
 			int hStruct = structElt.getImage().getHeight() / 2;
 			int wEven = image.getWidth() % 2 == 0 ? 0 : 1;
-			int hEven = image.getWidth() % 2 == 0 ? 0 : 1;
+			int hEven = image.getHeight() % 2 == 0 ? 0 : 1;
 
 			BufferedImage iul = image.getSubimage(0, 0, width + wStruct, height
 					+ hStruct);

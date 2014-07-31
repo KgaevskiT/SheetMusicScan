@@ -21,7 +21,7 @@ public class NoiseErosionParallel extends RecursiveTask<BufferedImage> {
 			int width = image.getWidth() / 2;
 			int height = image.getHeight() / 2;
 			int wEven = image.getWidth() % 2 == 0 ? 0 : 1;
-			int hEven = image.getWidth() % 2 == 0 ? 0 : 1;
+			int hEven = image.getHeight() % 2 == 0 ? 0 : 1;
 
 			NoiseErosionParallel ul = new NoiseErosionParallel(
 					image.getSubimage(0, 0, width + 1, height + 1), false);
