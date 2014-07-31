@@ -45,7 +45,6 @@ public class Main {
 		MultipleTasks myTasks = new MultipleTasks(rep);
 
 		Timer timer = new Timer();
-		Long start = System.currentTimeMillis();
 		// Nous lançons le traitement de notre tâche principale via le pool
 		pool.invoke(myTasks);
 

@@ -15,7 +15,6 @@ import music.Note;
 import music.Part;
 import music.Pitch;
 import music.Print;
-import music.ScorePartwise;
 import music.Stem;
 import music.Type;
 
@@ -102,7 +101,7 @@ public class MusicInitializer {
 
 		// Part
 		ArrayList<Measure> measures = getMeasures(attributes, elementImages);
-		parts.add(new Part("P1", measures));
+		parts.add(new Part(title, measures));
 		
 		PartsAndTitle result = new PartsAndTitle(parts, title);
 
